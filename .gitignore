@@ -17,3 +17,6 @@ this_profile's_activity_across_facebook/
 # 個人典藏內的入口頁也叫 index.html。專案只追蹤根目錄的工具入口。
 **/index.html
 !/index.html
+
+# 本機測試檔，不放上 GitHub
+test-archive.cjs
