@@ -1,0 +1,18 @@
+# 個人 Facebook 匯出檔與本工具產生的典藏檔
+*.[zZ][iI][pP]
+[Rr]eport.json
+*-核對報告.json
+
+# 解壓或測試個人資料時使用的資料夾
+/private-data/
+/exports/
+/archives/
+media/
+source/
+your_facebook_activity/
+your_activity_across_facebook/
+this_profile's_activity_across_facebook/
+
+# 個人典藏內的入口頁也叫 index.html。專案只追蹤根目錄的工具入口。
+**/index.html
+!/index.html

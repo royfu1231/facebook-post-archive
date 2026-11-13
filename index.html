@@ -1,0 +1,833 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' file: content: blob:; media-src 'self' file: content: blob:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>貼文典藏｜Facebook 離線保存工具</title>
+<style>
+:root{--paper:#f5f3eb;--card:#fffdf6;--ink:#20382f;--muted:#53635a;--green:#1f5542;--line:#c9cfc0;--gold:#d8ac65;--warn:#783b12;--soft:#e6ebdf;--serif:"PT Serif","Noto Serif CJK TC","Songti TC",PMingLiU,serif;--sans:"DM Sans","Noto Sans CJK TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.62}button,input,select{font:inherit;color:inherit}a{color:var(--green);overflow-wrap:anywhere}button,.button{border:1px solid var(--line);border-radius:7px;background:var(--card);padding:.62em 1em;cursor:pointer;font-weight:650;text-decoration:none}button:hover,.button:hover{background:var(--soft)}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid #af661d;outline-offset:3px}button:disabled{opacity:.5;cursor:wait}.primary{background:var(--green);color:white;border-color:var(--green)}.primary:hover{background:#174331}.link-button{background:transparent;border:0;padding:.25em 0;color:var(--green);text-decoration:underline;text-underline-offset:.2em}[hidden]{display:none!important}
+.wrap{max-width:1090px;margin:auto;padding:0 38px}.mast{border-bottom:1px solid var(--line)}.mast .wrap{height:69px;display:flex;align-items:center;justify-content:space-between}.brand{font-weight:750;letter-spacing:.06em;display:flex;align-items:center;gap:12px}.mark{display:inline-block;position:relative;width:28px;height:30px;background:var(--green);border-radius:4px}.mark:before,.mark:after{content:"";position:absolute;left:6px;right:6px;height:5px;border:1px solid #d3dbca;border-top-width:2px;border-radius:1px}.mark:before{top:6px}.mark:after{top:16px}.mast small{color:var(--muted);font-size:.84rem}.intro{padding:48px 0 24px}.intro h1{font:650 clamp(2.1rem,6vw,3.55rem)/1.14 var(--serif);letter-spacing:.025em;margin:0 0 12px}.intro p{margin:0;color:var(--muted);font-size:1.04rem}.startgrid{display:grid;grid-template-columns:1.13fr .87fr;gap:20px;align-items:stretch}.importbox,.guide,.panel{border:1px solid var(--line);border-radius:13px;background:var(--card)}.importbox,.guide{padding:27px 29px}.importbox{border-top:4px solid var(--green);padding-top:24px}.guide{background:#ebeee3}.guide ol{margin:.7rem 0 0;padding-left:1.4rem}.guide li+li{margin-top:7px}.guide a{display:inline-block;margin-top:10px;font-size:.86rem}.importbox h2,.guide h2,.panel h2{font:650 1.34rem/1.4 var(--serif);margin:0 0 8px}.muted,.filemeta{color:var(--muted)}.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.importbox .actions{margin:22px 0 11px}.importbox p,.guide p{margin:.25rem 0}.small{font-size:.86rem}.status{min-height:1.5em;margin:15px 0;color:var(--green);font-weight:600;overflow-wrap:anywhere}.status:empty{min-height:0;margin:0}.workhead{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;padding:32px 0 20px;flex-wrap:wrap}.workhead h1{font:650 clamp(1.8rem,5vw,2.7rem)/1.25 var(--serif);margin:0 0 5px}.workhead p{margin:0}.filters{padding:18px 20px;display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px}.filters label{display:grid;gap:2px;font-size:.84rem;color:var(--muted);font-weight:600}.filters .searchwrap{flex:3 1 230px}.filters input,.filters select{border:1px solid #adb8a9;border-radius:5px;background:#fffefa;padding:.45em .65em;min-height:42px;font-size:.95rem;max-width:100%;width:100%}.filters select{cursor:pointer}.filters .pick{flex:1 1 105px}.resultshead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:21px 0 11px}.resultshead h2{font:650 1.3rem var(--serif);margin:0}.report{margin:15px 0}.report>summary,.record>summary{cursor:pointer;color:var(--green);font-weight:650}.report>summary{padding:13px 19px}.reportbox{border-top:1px solid var(--line);padding:16px 19px;overflow-wrap:anywhere}.reportbox p{margin:.4em 0}.reportbox ul{padding-left:1.5rem}.reportbox li{margin:.33em 0}.warning{color:var(--warn)}.notice{background:#f7ebd6;border-left:3px solid #ba8a48;padding:10px 13px;border-radius:3px;overflow-wrap:anywhere}.items{display:grid;gap:12px}.post{padding:19px 23px;min-width:0}.posthead{display:flex;justify-content:space-between;align-items:center;gap:12px;color:var(--muted);font-size:.82rem}.kind{display:inline-block;color:var(--green);background:var(--soft);padding:2px 9px;border-radius:4px}.post h3{font-size:1.07rem;line-height:1.5;margin:11px 0 4px}.posttext{white-space:pre-wrap;overflow-wrap:anywhere;margin:.5em 0}.links{overflow-wrap:anywhere;padding-left:1.3rem}.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:8px;max-width:800px;margin:12px 0}.tile{padding:0;overflow:hidden;text-align:left;position:relative;display:flex;flex-direction:column;min-width:0;border-radius:6px;background:#eff1e9}.tile .thumb{height:132px;display:grid;place-items:center;width:100%;color:var(--muted);font-size:.83rem}.thumb img{width:100%;height:100%;max-height:132px;object-fit:cover}.tile .cap{padding:5px 8px;font-size:.79rem;font-weight:500;width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.record{margin:12px 0 0;font-size:.84rem}.record pre{white-space:pre-wrap;word-break:break-word;background:#eeefe7;padding:12px;border-radius:5px;max-height:22rem;overflow:auto}.record p{overflow-wrap:anywhere}.empty{padding:24px;text-align:center}.more{display:block;margin:18px auto 36px}.footer{border-top:1px solid var(--line);margin:34px 0 20px;padding-top:14px;font-size:.82rem;color:var(--muted)}dialog{width:min(900px,94vw);max-height:92vh;overflow:auto;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink)}dialog::backdrop{background:#15251fd4}.dialoghead{display:flex;align-items:center;justify-content:space-between;gap:10px}.dialoghead h2{font-size:1rem;overflow-wrap:anywhere;margin:0}.viewmedia{min-height:100px;display:grid;place-items:center;margin:12px 0}.viewmedia img,.viewmedia video{max-width:100%;max-height:65vh;object-fit:contain}.viewmedia audio{width:100%}.dialogfoot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.dialogfoot p{margin:0;font-size:.9rem;overflow-wrap:anywhere}
+@media(max-width:730px){.wrap{padding:0 18px}.mast .wrap{height:56px}.intro{padding:35px 0 18px}.startgrid{grid-template-columns:1fr;gap:12px}.importbox,.guide{padding:18px}.filters{padding:12px;gap:8px}.filters .searchwrap{flex-basis:100%}.filters .pick{flex-basis:25%;min-width:85px}.workhead{align-items:flex-start;padding:22px 0 14px}.post{padding:15px}.gallery{grid-template-columns:repeat(auto-fill,minmax(92px,1fr))}.tile .thumb,.thumb img{height:95px}.workhead .actions{gap:7px}.button,button{padding:.52em .8em}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header class="mast"><div class="wrap"><span class="brand"><span class="mark" aria-hidden="true"></span>貼文典藏</span><small>Facebook 離線保存工具</small></div></header>
+<main class="wrap">
+<noscript><p class="notice">請下載這個 HTML 檔後，用啟用 JavaScript 的瀏覽器開啟。檔案預覽器可能無法操作。</p></noscript>
+<section id="start">
+  <div class="intro"><h1>Facebook 貼文典藏</h1><p>把貼文、相片和說明存成一份能離線搜尋的收藏。</p></div>
+  <div class="startgrid">
+    <section class="importbox"><h2>開啟你的匯出檔</h2><p class="muted">選同一個個人檔案、同一次匯出的所有 ZIP。也能重開本工具製作的典藏包。</p><div class="actions"><button type="button" id="chooseZip" class="primary">選擇 ZIP 分檔</button><button type="button" id="chooseFolder">選擇已解壓資料夾</button></div><p class="small muted">資料只在這台裝置上讀取。多個已解壓分檔可放進同一個上層資料夾後一起選取。</p></section>
+    <aside class="guide"><h2>在 Facebook 準備資料</h2><ol><li>到設定中的「匯出你的資訊」或「下載你的資訊」，確認選到目標分身。</li><li>選「匯出到裝置」，日期選「所有時間」，格式選 <b>JSON</b>，媒體畫質選「高」。</li><li>建議選全部可用資料；要縮小範圍，請包含貼文、相片影片，以及要保存的社團活動。</li></ol><a href="https://www.facebook.com/help/212802592074644" target="_blank" rel="noopener noreferrer">Facebook 官方匯出說明 ↗</a></aside>
+  </div>
+</section>
+<input id="zipInput" type="file" accept=".zip,application/zip,application/x-zip-compressed" multiple hidden>
+<input id="folderInput" type="file" webkitdirectory multiple hidden>
+<p class="status" id="status" role="status" aria-live="polite"></p>
+<section id="library" hidden>
+ <div class="workhead"><div><h1 id="heading">我的貼文典藏</h1><p class="muted" id="totals"></p></div><div class="actions"><button type="button" id="back">另開一份</button><button type="button" id="save" class="primary">儲存離線典藏 ZIP</button></div></div>
+ <div class="filters panel">
+   <label class="searchwrap">搜尋全文<input id="search" type="search" placeholder="輸入貼文、相片說明或關鍵字" autocomplete="off"></label>
+   <label class="pick">年份<select id="year"><option value="">所有年份</option></select></label>
+   <label class="pick">顯示<select id="filter"><option value="">所有項目</option><option value="posts">貼文</option><option value="group">社團貼文</option><option value="image">含相片</option><option value="loose">未配對媒體</option><option value="need">附件待核對</option></select></label>
+   <label class="pick">排序<select id="order"><option value="new">由新到舊</option><option value="old">由舊到新</option></select></label>
+ </div>
+ <details class="report panel" id="report"><summary id="reportSummary">匯入核對報告</summary><div id="reportBody" class="reportbox"></div></details>
+ <div class="resultshead"><h2 id="resultCount" aria-live="polite"></h2><button class="link-button" id="clear" type="button" hidden>清除篩選</button></div>
+ <div class="items" id="items"></div><button class="more" id="more" hidden>顯示更多</button>
+</section>
+<div class="footer" id="foot">請保留 Facebook 原始 ZIP。典藏包收錄可辨識的貼文資料、附件及核對結果。</div>
+</main>
+<dialog id="lightbox"><div class="dialoghead"><h2 id="viewerTitle">附件</h2><button id="closeViewer" type="button">關閉</button></div><div id="viewMedia" class="viewmedia"></div><div class="dialogfoot"><p id="viewerInfo"></p><a id="downloadMedia" class="button" hidden>下載檔案</a></div></dialog>
+<script type="application/json" id="archive-data">null</script>
+<script>
+'use strict';
+// ZIP inputs are indexed from their central directory. Media is read one entry at a time.
+const utf8 = new TextEncoder();
+const strictUTF8 = new TextDecoder('utf-8', {fatal:true});
+const U32 = 0xffffffff;
+const safe64 = n => {
+  if (n > BigInt(Number.MAX_SAFE_INTEGER)) throw Error('檔案位移超過此瀏覽器可處理的範圍');
+  return Number(n);
+};
+const viewOf = bytes => new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+const bytesAt = async (blob, start, length) => {
+  if (start < 0 || length < 0 || start + length > blob.size) throw Error('ZIP 檔不完整，請重新下載這一包');
+  return new Uint8Array(await blob.slice(start, start + length).arrayBuffer());
+};
+const crcTable = Uint32Array.from({length:256}, (_, n) => {
+  for (let j = 0; j < 8; j++) n = n & 1 ? 0xedb88320 ^ (n >>> 1) : n >>> 1;
+  return n >>> 0;
+});
+const updateCRC = (crc, block) => {
+  for (let i = 0; i < block.length; i++) crc = crcTable[(crc ^ block[i]) & 255] ^ (crc >>> 8);
+  return crc;
+};
+function zipName(bytes, flags, extra) {
+  let name;
+  try { name = strictUTF8.decode(bytes); } catch {
+    const high = 'ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬½¼¡«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ ';
+    name = Array.from(bytes, b => b < 128 ? String.fromCharCode(b) : high[b-128]).join('');
+  }
+  const alt = extra.get(0x7075);
+  if (!(flags & 0x800) && alt && alt.length > 5 && alt[0] === 1 &&
+      viewOf(alt).getUint32(1,true) === ((updateCRC(U32,bytes)^U32) >>> 0)) {
+    try { name = strictUTF8.decode(alt.subarray(5)); } catch {}
+  }
+  return name;
+}
+function extras(bytes) {
+  const fields = new Map(), v = viewOf(bytes);
+  for (let p = 0; p + 4 <= bytes.length;) {
+    const id = v.getUint16(p,true), n = v.getUint16(p+2,true);
+    if (p + 4 + n > bytes.length) throw Error('ZIP 附加欄位不完整');
+    fields.set(id, bytes.subarray(p+4,p+4+n));
+    p += 4+n;
+  }
+  return fields;
+}
+async function listZip(file, source) {
+  const tail = await bytesAt(file, Math.max(0,file.size-65557), Math.min(file.size,65557));
+  const v = viewOf(tail);
+  let end = tail.length - 22;
+  while (end >= 0 && (v.getUint32(end,true) !== 0x06054b50 ||
+         end + 22 + v.getUint16(end+20,true) !== tail.length)) end--;
+  if (end < 0) throw Error('無法讀取 ZIP 目錄，請確認此分檔已下載完成');
+  if (v.getUint16(end+4,true) || v.getUint16(end+6,true)) throw Error('請先用解壓縮軟體合併跨磁碟分卷，再選擇資料夾');
+  let count = v.getUint16(end+10,true), size = v.getUint32(end+12,true), offset = v.getUint32(end+16,true);
+  const absoluteEnd = file.size - tail.length + end;
+  const loc = absoluteEnd >= 20 ? viewOf(await bytesAt(file,absoluteEnd-20,20)) : null;
+  if (loc && loc.getUint32(0,true) === 0x07064b50) {
+    if (loc.getUint32(4,true) || loc.getUint32(16,true) !== 1) throw Error('跨磁碟分卷請先解壓縮');
+    const z = viewOf(await bytesAt(file,safe64(loc.getBigUint64(8,true)),56));
+    if (z.getUint32(0,true) !== 0x06064b50 || z.getUint32(16,true) || z.getUint32(20,true)) throw Error('ZIP64 目錄無法讀取');
+    count = safe64(z.getBigUint64(32,true)); size = safe64(z.getBigUint64(40,true)); offset = safe64(z.getBigUint64(48,true));
+  }
+  const directory = await bytesAt(file,offset,size), d = viewOf(directory), entries = [];
+  for (let p=0, i=0; i<count; i++) {
+    if (p+46 > size || d.getUint32(p,true) !== 0x02014b50) throw Error('ZIP 中央目錄損壞');
+    const flags=d.getUint16(p+8,true), method=d.getUint16(p+10,true), crc=d.getUint32(p+16,true);
+    let compressed=d.getUint32(p+20,true), plain=d.getUint32(p+24,true), local=d.getUint32(p+42,true);
+    const n=d.getUint16(p+28,true), x=d.getUint16(p+30,true), c=d.getUint16(p+32,true), next=p+46+n+x+c;
+    if (next>size) throw Error('ZIP 檔名或附加欄位不完整');
+    const extra=extras(directory.subarray(p+46+n,p+46+n+x)), z64=extra.get(1);
+    let zi=0;
+    const expand = number => {
+      if (number !== U32) return number;
+      if (!z64 || zi+8>z64.length) throw Error('缺少 ZIP64 檔案長度');
+      const out=safe64(viewOf(z64).getBigUint64(zi,true)); zi+=8; return out;
+    };
+    plain=expand(plain); compressed=expand(compressed); local=expand(local);
+    const path=zipName(directory.subarray(p+46,p+46+n),flags,extra).replaceAll('\\','/');
+    if (!path.endsWith('/') && !path.startsWith('__MACOSX/') && !path.includes('/._') && !path.includes('\0')) {
+      entries.push({source,path,size:plain,compressed,method,crc,flags,file,local});
+    }
+    p=next;
+  }
+  return entries;
+}
+function looseEntry(blob, path, source) {
+  return {source,path,size:blob.size,compressed:blob.size,method:0,crc:null,flags:0,packed:blob};
+}
+async function packedBlob(entry) {
+  if (entry.packed) return entry.packed;
+  if (entry.flags & 1) throw Error('壓縮檔已加密，請先解壓縮');
+  if (entry.method !== 0 && entry.method !== 8) throw Error('不支援此壓縮方式，請先解壓縮');
+  const header=viewOf(await bytesAt(entry.file,entry.local,30));
+  if (header.getUint32(0,true)!==0x04034b50 || header.getUint16(8,true)!==entry.method) throw Error('ZIP 項目標頭損壞');
+  const pos=entry.local+30+header.getUint16(26,true)+header.getUint16(28,true);
+  if (pos+entry.compressed>entry.file.size) throw Error('檔案資料不完整');
+  entry.packed=entry.file.slice(pos,pos+entry.compressed);
+  return entry.packed;
+}
+async function inspectEntry(entry, collect=false) {
+  const packed = await packedBlob(entry);
+  if (!collect && entry.checked) return null;
+  let stream=packed.stream();
+  if (entry.method===8) {
+    try { stream=stream.pipeThrough(new DecompressionStream('deflate-raw')); }
+    catch { throw Error('瀏覽器無法解壓縮。請將所有 ZIP 解開並改用「選擇資料夾」'); }
+  }
+  const reader=stream.getReader(), chunks=[];
+  let crc=U32, length=0;
+  try {
+    for (;;) {
+      const {done,value}=await reader.read();
+      if (done) break;
+      length+=value.length;
+      if (length>entry.size) throw Error('解壓後長度與 ZIP 紀錄不符');
+      crc=updateCRC(crc,value);
+      if (collect && entry.method!==0) chunks.push(value);
+    }
+  } catch (err) { await reader.cancel().catch(()=>{}); throw err; }
+  crc=(crc^U32)>>>0;
+  if (length!==entry.size || (entry.crc!==null && crc!==entry.crc)) throw Error('長度或 CRC 校驗失敗，請重新下載這一包');
+  entry.crc=crc; entry.checked=true;
+  return collect ? (entry.method===0 ? packed : new Blob(chunks)) : null;
+}
+class ZipWriter {
+  constructor(stream) { this.stream=stream; this.parts=[]; this.headers=[]; this.offset=0; }
+  async write(part) {
+    if (this.stream) await this.stream.write(part); else this.parts.push(part);
+    this.offset+=part instanceof Blob ? part.size : part.byteLength;
+  }
+  async add(name,entry) {
+    const packed=await packedBlob(entry);
+    await inspectEntry(entry);
+    const nameBytes=utf8.encode(name), start=this.offset;
+    const bigSize=entry.size>=U32 || entry.compressed>=U32, bigOffset=start>=U32;
+    const makeExtra = values => {
+      if (!values.length) return new Uint8Array(0);
+      const bytes=new Uint8Array(4+8*values.length), d=viewOf(bytes);
+      d.setUint16(0,1,true); d.setUint16(2,bytes.length-4,true);
+      values.forEach((n,i)=>d.setBigUint64(4+i*8,BigInt(n),true)); return bytes;
+    };
+    const sizes=bigSize ? [entry.size,entry.compressed] : [];
+    const localExtra=makeExtra(sizes), centralExtra=makeExtra(bigOffset ? [...sizes,start] : sizes);
+    const header=(central,extra)=>{
+      const fixed=central?46:30, b=new Uint8Array(fixed+nameBytes.length+extra.length), d=viewOf(b);
+      const at=central?6:4;
+      d.setUint32(0,central?0x02014b50:0x04034b50,true);
+      if (central) d.setUint16(4,45,true);
+      d.setUint16(at,bigSize||bigOffset?45:20,true); d.setUint16(at+2,0x800,true);
+      d.setUint16(at+4,entry.method,true); d.setUint16(at+8,0x21,true);
+      d.setUint32(at+10,entry.crc,true); d.setUint32(at+14,bigSize?U32:entry.compressed,true);
+      d.setUint32(at+18,bigSize?U32:entry.size,true); d.setUint16(at+22,nameBytes.length,true);
+      d.setUint16(at+24,extra.length,true);
+      if (central) d.setUint32(42,bigOffset?U32:start,true);
+      b.set(nameBytes,fixed); b.set(extra,fixed+nameBytes.length); return b;
+    };
+    await this.write(header(false,localExtra)); await this.write(packed);
+    this.headers.push(header(true,centralExtra));
+  }
+  async finish() {
+    const start=this.offset, count=this.headers.length;
+    await this.write(new Blob(this.headers));
+    const size=this.offset-start, large=count>=65535 || size>=U32 || start>=U32;
+    if (large) {
+      const here=this.offset, b=new Uint8Array(76), d=viewOf(b);
+      d.setUint32(0,0x06064b50,true); d.setBigUint64(4,44n,true); d.setUint16(12,45,true); d.setUint16(14,45,true);
+      [count,count,size,start].forEach((n,i)=>d.setBigUint64(24+8*i,BigInt(n),true));
+      d.setUint32(56,0x07064b50,true); d.setBigUint64(64,BigInt(here),true); d.setUint32(72,1,true); await this.write(b);
+    }
+    const b=new Uint8Array(22), d=viewOf(b); d.setUint32(0,0x06054b50,true);
+    d.setUint16(8,Math.min(count,65535),true); d.setUint16(10,Math.min(count,65535),true);
+    d.setUint32(12,Math.min(size,U32),true); d.setUint32(16,Math.min(start,U32),true); await this.write(b);
+    if (this.stream) { await this.stream.close(); return null; }
+    return new Blob(this.parts,{type:'application/zip'});
+  }
+}
+
+
+const archiveFormat='fb-posts-local/1';
+const imageTypes={jpg:'jpeg',jpeg:'jpeg',jfif:'jpeg',png:'png',webp:'webp',gif:'gif',avif:'avif',bmp:'bmp',heic:'heic',heif:'heif',tif:'tiff',tiff:'tiff'};
+const videoTypes={mp4:'mp4',m4v:'mp4',mov:'quicktime',webm:'webm',mkv:'x-matroska',avi:'x-msvideo',ogv:'ogg', '3gp':'3gpp'};
+const audioTypes={mp3:'mpeg',m4a:'mp4',wav:'wav',flac:'flac',aac:'aac',ogg:'ogg',opus:'ogg'};
+const baseName=s=>s.split(/[\\/]/).pop() || '';
+function extension(path) {
+  let last=baseName(path.split(/[?#]/)[0]);
+  try { last=decodeURIComponent(last); } catch {}
+  return (last.match(/\.([a-z\d]{1,10})$/i)?.[1] || '').toLowerCase();
+}
+function mediaType(path) {
+  const ext=extension(path);
+  for (const [kind,types] of [['image',imageTypes],['video',videoTypes],['audio',audioTypes]]) {
+    if (Object.hasOwn(types,ext)) return {kind,mime:kind+'/'+types[ext]};
+  }
+  return {kind:'file',mime:'application/octet-stream'};
+}
+function fixedText(s) {
+  if (typeof s!=='string') return '';
+  // Meta exports may represent UTF-8 bytes as individual Latin-1 code points.
+  return s.replace(/[\u00c2-\u00df][\u0080-\u00bf]|[\u00e0-\u00ef][\u0080-\u00bf]{2}|[\u00f0-\u00f4][\u0080-\u00bf]{3}/g, run=>{
+    try { return strictUTF8.decode(Uint8Array.from(run,c=>c.charCodeAt(0))); } catch { return run; }
+  });
+}
+function canonicalPath(path) {
+  const parts=[];
+  for (const p of path.replaceAll('\\','/').normalize('NFC').split('/')) {
+    if (!p || p==='.') continue;
+    if (p==='..') parts.pop(); else parts.push(p);
+  }
+  return parts.join('/');
+}
+const partsOf=p=>p.normalize('NFKC').toLowerCase().split('/');
+const webLink=s=>/^(?:https?:\/\/|\/\/)[^\s]/i.test(s);
+const absoluteWeb=s=>s.startsWith('//')?'https:'+s:s;
+const inMessaging=part=>/^(?:your_)?(?:messages?|messenger|inbox)(?:$|[_（(])/.test(part);
+function postFile(path) {
+  const parts=partsOf(path), name=parts.pop(), base=name.replace(/\.json$/,'');
+  if (!name.endsWith('.json') || parts.some(inMessaging) || parts.some(p=>/^(ads_information|ads_and_businesses|friends_and_followers)$/.test(p))) return '';
+  const categories=parts.map(p=>p.split(/[（(]/)[0].replace(/[_\s]+$/,''));
+  if (/(?:^|_)group.*post|post.*(?:in_|to_)groups?|your_(?:group_)?posts_and_comments_in_groups/.test(base)) return 'group';
+  if (categories.some(p=>['album','albums','photo_albums','相簿'].includes(p)) || /^(?:your_)?albums?(?:_|$)/.test(base) || /相簿/.test(base)) return 'album';
+  if (/(?:uncategori[sz]ed_(?:photos|videos)|(?:your_|uploaded_|profile_|cover_|mobile_|timeline_)(?:photos|videos|pictures)|photo_albums)/.test(base) && !/posts/.test(base)) return 'photo';
+  if (/^(?:your_|archived_|trashed_|other_peoples_|other_people.s_)?posts?(?:$|_|\d)|^timeline(?:$|_)|^貼文|^你的貼文/.test(base)) return 'post';
+  if (categories.some(p=>/^(posts|貼文|photos_and_videos|photos_videos|相片和影片)$/.test(p))) return 'candidate';
+  return '';
+}
+function scopedMedia(path) {
+  const parts=partsOf(path).map(p=>p.split(/[（(]/)[0].replace(/[_\s]+$/,''));
+  if (parts.some(inMessaging) || parts.some(p=>/^(stickers|likes_and_reactions)$/.test(p))) return false;
+  return mediaType(path).kind!=='file' && parts.slice(0,-1).some(p=>
+    /^(posts|your_posts|photos_and_videos|photos|videos|albums?|groups?|group_posts|profile_pictures|cover_photos|貼文|相片|相簿|社團)$/.test(p));
+}
+function toEpoch(value) {
+  if (value==null || value==='') return null;
+  let n=typeof value==='number'||/^\d+(\.\d+)?$/.test(value) ? Number(value) : Date.parse(value)/1000;
+  if (n>1e11) n/=1000;
+  return Number.isFinite(n) && !Number.isNaN(new Date(n*1000).getTime()) ? n : null;
+}
+function makeResolver(entries) {
+  const suffixes=new Map();
+  for (const entry of entries) {
+    if (/\.(?:json|html?)$/i.test(entry.path) || partsOf(entry.path).some(inMessaging)) continue;
+    const parts=canonicalPath(entry.path).split('/');
+    for (let i=0;i<parts.length;i++) {
+      const key=parts.slice(i).join('/');
+      if (!suffixes.has(key)) suffixes.set(key,[]);
+      suffixes.get(key).push(entry);
+    }
+  }
+  return (reference,src)=>{
+    if (webLink(reference) || /^[a-z][a-z\d+.-]*:/i.test(reference)) return {state:'external'};
+    const variants=new Set([reference, fixedText(reference)]);
+    for (const p of [...variants]) {
+      try { variants.add(decodeURIComponent(p)); } catch {}
+      const bare=p.split(/[?#]/)[0];
+      if (bare!==p) { variants.add(bare); try { variants.add(decodeURIComponent(bare)); } catch {} }
+    }
+    const parent=src.path.split('/').slice(0,-1).join('/');
+    for (const raw of variants) {
+      const clean=canonicalPath(raw), anchor=clean.match(/(?:^|\/)((?:posts|photos_and_videos|groups|photos|videos)\/.+)$/i)?.[1];
+      const keys=[canonicalPath(parent+'/'+raw),clean];
+      if (anchor && anchor!==clean) keys.push(anchor);
+      for (const key of keys) {
+        let hits=suffixes.get(key);
+        if (!hits?.length) continue;
+        const same=hits.filter(e=>e.source===src.source);
+        if (same.length) hits=same;
+        if (hits.length===1) return {entry:hits[0]};
+        if (hits[0].crc!==null && hits.every(e=>e.crc===hits[0].crc&&e.size===hits[0].size)) return {entry:hits[0]};
+        return {state:'ambiguous'};
+      }
+    }
+    return {state:'missing'};
+  };
+}
+function *stringsIn(value) {
+  if (typeof value==='string') { yield fixedText(value); return; }
+  if (value && typeof value==='object') for (const v of Object.values(value)) yield* stringsIn(v);
+}
+function collectRows(obj, kind, emit, where='$') {
+  if (Array.isArray(obj)) {
+    obj.forEach((row,i)=> {
+      if (row && typeof row==='object') collectRows(row,kind,emit,where+'['+i+']');
+      else if (row!=null) emit(row,'other',where+'['+i+']');
+    });
+    return;
+  }
+  if (!obj || typeof obj!=='object') { if (obj!=null) emit(obj,'other',where); return; }
+  const keys=Object.keys(obj);
+  if (kind==='album' && (obj.name||obj.title||obj.cover_photo) && (obj.photos||obj.videos||obj.media||obj.photos_v2)) {
+    emit(obj,'album',where); return;
+  }
+  if (['timestamp','creation_timestamp','creation_time','created_time','attachments','label_values','post','media','uri','src','message','text','comment','life_event'].some(k=>k in obj)
+      || (Array.isArray(obj.data) && obj.data.some(v=>v&&typeof v==='object'&&('post' in v||'comment' in v||'external_context' in v||'media' in v)))) {
+    let actual=kind;
+    if (kind==='candidate') {
+      const containsPost='post' in obj || (Array.isArray(obj.data)&&obj.data.some(v=>v&&typeof v==='object'&&'post' in v));
+      actual=containsPost?'post':'other';
+    }
+    emit(obj,actual,where); return;
+  }
+  const branches=keys.filter(k=>(Array.isArray(obj[k]) || (obj[k]&&typeof obj[k]==='object')) &&
+    /(?:post|group|photo|video|album|timeline|check_?in|comment|media|^data$|^items$|^entries$|^records$)/i.test(k));
+  if (branches.length) {
+    for (const k of branches) {
+      let sub=kind;
+      if (/comment/i.test(k)&&!/post/i.test(k)) sub='comment';
+      else if (/group/i.test(k)&&/post/i.test(k)) sub='group';
+      else if (/album/i.test(k)) sub='album';
+      else if (kind==='candidate'&&/post/i.test(k)) sub='post';
+      else if ((kind==='candidate'||kind==='album')&&/photo|video/i.test(k)) sub='photo';
+      collectRows(obj[k],sub,emit,where+'.'+k);
+    }
+    return;
+  }
+  if (keys.length) emit(obj,kind==='candidate'||(!obj.title&&!obj.description&&!obj.name)?'other':kind,where);
+}
+function normalRecord(raw,kind,srcId,locator,resolve,addAsset,entry) {
+  const obj=raw&&typeof raw==='object'?raw:{text:String(raw)}, body=new Set(), links=new Map(), attachments=new Map();
+  const title=fixedText(obj.title||obj.name||obj.album_name);
+  let ts=toEpoch(obj.timestamp??obj.creation_timestamp??obj.creation_time??obj.created_time??obj.taken_at);
+  const addText=value=>{if (value && value!==title) body.add(value);};
+  function attach(ref,label,hint) {
+    const key=String(ref);
+    if (attachments.has(key)) return;
+    const matched=ref?resolve(ref,entry):{state:'unspecified'};
+    const asset=matched.entry ? addAsset(matched.entry) : null;
+    attachments.set(key,{ref, label, asset, state:matched.state||'', hint});
+  }
+  function visit(node, context='') {
+    if (Array.isArray(node)) { for (const v of node) visit(v,context); return; }
+    if (!node || typeof node!=='object') return;
+    const label=fixedText(node.description||node.caption||node.title||node.name||'');
+    let sawRef=false;
+    for (const [k,value] of Object.entries(node)) {
+      if (typeof value==='string') {
+        const t=fixedText(value);
+        if (['post','text','message','comment','description','caption','body','name','title','value','address','place_name'].includes(k)) addText(t);
+        if (['uri','src','file_path','media_uri','image_uri','image_url','photo_uri','thumbnail','thumbnail_url','video_uri'].includes(k)
+          || (['url','href','attachment'].includes(k)&&(/^(media|photo|image|video|audio|thumbnail)$/.test(context)||(!webLink(t)&&mediaType(t).kind!=='file')))
+          || (['media','image','photo','video','audio','file'].includes(k)&&(/[/\\.]/.test(t)))) {
+          const hint=(mediaType(t).kind!=='file'?mediaType(t).kind: (/image|photo|thumb/.test(k+' '+context)?'image':'file'));
+          attach(value,label,hint); sawRef=true;
+        } else if (webLink(t) && ['url','href','link','permalink','external_url','value'].includes(k)) {
+          links.set(t, {url:absoluteWeb(t),label:label||t});
+        }
+      } else if (value && typeof value==='object') visit(value,k);
+    }
+    if (context==='media' && !sawRef && !Object.values(node).some(v=>v&&typeof v==='object'&&('uri' in v||'src' in v||'url' in v))) {
+      if (!Array.isArray(node) && ('media_metadata' in node || 'creation_timestamp' in node)) attach('',label,'file');
+    }
+  }
+  visit(obj);
+  if (ts===null) {
+    const media=obj.attachments?.[0]?.data?.[0]?.media;
+    ts=toEpoch(media?.creation_timestamp);
+  }
+  return {kind,title,body:[...body],ts,links:[...links.values()],attachments:[...attachments.values()],src:srcId,locator,raw};
+}
+const nextFrame=()=>new Promise(ok=>setTimeout(ok,0));
+async function loadFacebook(entries,inputs,issues,onProgress) {
+  const data={format:archiveFormat,created:new Date().toISOString(),inputs,items:[],assets:[],sources:[],issues,otherJSON:[]};
+  const assets=[], sources=[], byEntry=new Map(), seenSource=new Map();
+  const resolve=makeResolver(entries);
+  function addAsset(entry) {
+    if (byEntry.has(entry)) return byEntry.get(entry);
+    const id=assets.length, ext=extension(entry.path), file='media/'+String(id+1).padStart(6,'0')+(ext?'.'+ext:'.bin');
+    const mt=mediaType(entry.path);
+    assets.push(entry); data.assets.push({file,path:entry.path,size:entry.size,kind:mt.kind,mime:mt.mime});
+    byEntry.set(entry,id); return id;
+  }
+  const candidates=entries.filter(e=>postFile(e.path));
+  // Meta numbers its post JSON parts. Gaps are detectable even if no attachment points at the absent part.
+  const sequences=new Map();
+  for(const e of candidates) {
+    const m=baseName(e.path).match(/^(.+)_([1-9]\d*)\.json$/i);
+    if(!m||!['post','group'].includes(postFile(e.path)))continue;
+    const key=e.path.split('/').slice(-2,-1).join('/')+'/'+m[1];
+    if(!sequences.has(key))sequences.set(key,new Set());
+    sequences.get(key).add(Number(m[2]));
+  }
+  for(const [series,numbers] of sequences) {
+    const sorted=[...numbers].sort((a,b)=>a-b), gaps=[];let expected=1;
+    for(const n of sorted) {
+      if(n>expected)gaps.push(n===expected+1?String(expected):expected+'–'+(n-1));
+      expected=n+1;
+    }
+    if(gaps.length)data.issues.push(series+' 的 JSON 編號未連續，缺少 '+gaps.join('、')+'。請核對是否漏選匯出分檔。');
+  }
+  for (const e of entries) if (/\.json$/i.test(e.path) && !postFile(e.path)) data.otherJSON.push(inputs[e.source]+' ／ '+e.path);
+  for (const [i,entry] of candidates.entries()) {
+    onProgress('正在讀取貼文資料 '+(i+1)+' / '+candidates.length);
+    const s={path:entry.path,bundle:inputs[entry.source],file:'source/'+String(i+1).padStart(5,'0')+'.json',count:0,note:''};
+    data.sources.push(s); sources.push(entry);
+    try {
+      const blob=await inspectEntry(entry,true), text=strictUTF8.decode(await blob.arrayBuffer());
+      const raw=JSON.parse(text);
+      const tail=canonicalPath(entry.path).match(/(?:^|\/)((?:posts|groups|photos_and_videos)\/.+)$/i)?.[1]||canonicalPath(entry.path);
+      const key=JSON.stringify([tail,entry.crc,entry.size]);
+      const previous=seenSource.get(key);
+      if (previous!==undefined && text===strictUTF8.decode(await (await inspectEntry(sources[previous],true)).arrayBuffer())) {
+        s.note='與其他分檔的同一份資料相同，貼文已計入'; continue;
+      }
+      seenSource.set(key,i);
+      let unknown=0;
+      collectRows(raw,postFile(entry.path),(obj,kind,loc)=>{
+        const r=normalRecord(obj,kind,i,loc,resolve,addAsset,entry);
+        data.items.push(r); s.count++;
+        if (kind==='other') unknown++;
+      });
+      if (unknown) s.note=unknown+' 筆欄位格式待核對，可搜尋、展開原始資料';
+      if (!s.count) s.note='沒有可建立索引的紀錄，請核對原始檔';
+    } catch (err) { s.note='讀取失敗：'+err.message; data.issues.push(s.path+' — '+s.note); }
+    if (i%8===0) await nextFrame();
+  }
+  const linked=new Set(assets.map((_,i)=>i));
+  for (const entry of entries.filter(e=>scopedMedia(e.path))) {
+    const id=addAsset(entry);
+    if (linked.has(id)) continue;
+    linked.add(id);
+    data.items.push({kind:'loose',title:baseName(entry.path),body:[],ts:null,links:[],attachments:[{asset:id,ref:entry.path,label:'',state:'',hint:data.assets[id].kind}],src:null,locator:'',raw:null});
+  }
+  if (!candidates.length) {
+    const html=entries.some(e=>/\.html?$/i.test(e.path));
+    data.issues.push(html?'找到 HTML 或網頁檔，但沒有辨識到貼文 JSON。請回 Facebook 選 JSON 重新匯出所有時間，或補齊含貼文的 ZIP 分檔。':'沒有辨識到貼文 JSON。請確認個人檔案、資料類別、JSON 格式及 ZIP 分檔是否齊全。');
+  }
+  return {data,assets,sources,mode:'input'};
+}
+
+
+const $=id=>document.getElementById(id);
+const el=(tag,text='',cls='')=>{const node=document.createElement(tag); if (text!=='') node.textContent=text; if (cls) node.className=cls; return node;};
+const insert=(parent,tag,text,cls)=>parent.appendChild(el(tag,text,cls));
+const count=n=>n.toLocaleString('zh-TW');
+const kindNames={post:'貼文',group:'社團貼文',photo:'相片／影片紀錄',album:'相簿',loose:'未配對媒體',comment:'留言紀錄',other:'其他原始紀錄'};
+const problems={missing:'找不到本機檔案',external:'只有外部連結',ambiguous:'有多個同名候選檔',unspecified:'匯出紀錄未提供附件路徑',damaged:'附件無法讀取'};
+const archiveClock=new Intl.DateTimeFormat('zh-TW',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false});
+const formatTime=ts=>ts==null?'日期未提供':archiveClock.format(new Date(ts*1000));
+const readableSize=n=>n>=1048576?(n/1048576).toFixed(1)+' MB':Math.ceil(n/1024)+' KB';
+const normalize=s=>s.normalize('NFKC').toLocaleLowerCase();
+const setStatus=t=>{$('status').textContent=t;};
+const stamp=()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');};
+const jsonBlob=data=>new Blob([JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8'});
+function download(blob,name) {
+  const url=URL.createObjectURL(blob), a=el('a'); a.href=url;a.download=name;document.body.append(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),60000);
+}
+const safeJSON=data=>JSON.stringify(data).replace(/[<>&\u2028\u2029]/g,c=>'\\u'+c.charCodeAt(0).toString(16).padStart(4,'0'));
+const payloadTag='<script type="application/json" id="archive-data">';
+const endScript='</scr'+'ipt>';
+const embedded=$('archive-data').textContent;
+$('archive-data').textContent='null';
+const template='<!doctype html>\n'+document.documentElement.outerHTML;
+const makeIndex=data=>new Blob([template.replace(payloadTag+'null'+endScript,()=>payloadTag+safeJSON(data)+endScript)],{type:'text/html;charset=utf-8'});
+let active=null, busy=false, searchable=[], matches=[], shown=0, searchTimer=0;
+const busyControls=['chooseZip','chooseFolder','save','back'];
+function lock(flag) {busy=flag; for (const key of busyControls) $(key).disabled=flag;}
+function dataCheck(data) {
+  if (!data || data.format!==archiveFormat || !['items','assets','sources','issues','inputs','otherJSON'].every(k=>Array.isArray(data[k]))) throw Error('典藏索引格式不符');
+  if (!data.items.every(r=>r && Array.isArray(r.body)&&Array.isArray(r.attachments)&&Array.isArray(r.links))) throw Error('典藏項目格式不符');
+  return data;
+}
+function safeFile(file,type) {
+  const re=type==='asset'?/^media\/[0-9]+\.[a-z0-9]{1,10}$/:/^source\/[0-9]+\.json$/;
+  if (!re.test(file)) throw Error('典藏索引的檔案路徑無效');
+  return file;
+}
+function isPost(r) {return r.kind==='post'||r.kind==='group';}
+function issueOf(data,a) {
+  if (a.state) return a.state;
+  return a.asset==null || !data.assets[a.asset] || data.assets[a.asset].problem ? 'damaged' : '';
+}
+function itemYear(r){return r.ts==null?'?':String(new Date(r.ts*1000).getFullYear());}
+function itemTitle(r) {return r.title || r.body.find(t=>t.trim())?.slice(0,85) || kindNames[r.kind] || '原始紀錄';}
+function allProblems(data) {
+  const out=[];
+  for (const r of data.items) for (const a of r.attachments) {
+    const issue=issueOf(data,a);
+    if (issue) out.push({項目:itemTitle(r),時間:formatTime(r.ts),原因:problems[issue]||issue,附件:a.ref||a.label||'未提供',來源:r.src==null?'':data.sources[r.src]?.path,位置:r.locator});
+  }
+  return out;
+}
+function audit(data) {
+  return {建立時間:data.created,選取分檔:data.inputs,貼文筆數:data.items.filter(isPost).length,
+    其他紀錄筆數:data.items.filter(r=>!isPost(r)&&r.kind!=='loose').length,未配對媒體筆數:data.items.filter(r=>r.kind==='loose').length,
+    可用圖片檔數:data.assets.filter(a=>a.kind==='image'&&!a.problem).length,可用附件檔數:data.assets.filter(a=>!a.problem).length,
+    附件待核對:allProblems(data),讀取提示:data.issues,來源資料:data.sources.map(s=>({原始分檔:s.bundle,路徑:s.path,典藏檔:s.problem?null:s.file,索引項目:s.count,狀態:s.note||'已建立索引',檔案問題:s.problem||''})),
+    未納入索引的其他JSON路徑:data.otherJSON,範圍:'僅能核對實際提供的匯出檔；匯出中完全缺少的紀錄或附件無法計數。'};
+}
+async function uriFor(id) {
+  const owner=active, a=owner.data.assets[id];
+  if (!a||a.problem) throw Error(a?.problem||'找不到附件');
+  if (owner.mode==='static') return safeFile(a.file,'asset');
+  const e=owner.assets[id];
+  if (!e) throw Error('典藏包缺少這個附件');
+  const blob=await inspectEntry(e,true);
+  return URL.createObjectURL(blob.slice(0,blob.size,mediaType(a.file).mime));
+}
+function release(url) {if (url?.startsWith('blob:')) URL.revokeObjectURL(url);}
+let viewerURL='', viewerToken=0;
+function dismiss() {
+  viewerToken++; $('viewMedia').replaceChildren(); $('downloadMedia').hidden=true; $('downloadMedia').removeAttribute('href');
+  release(viewerURL);viewerURL='';
+}
+$('closeViewer').onclick=()=>$('lightbox').close();
+$('lightbox').addEventListener('close',dismiss);
+async function openAsset(id,label='') {
+  const a=active.data.assets[id]; if (!a) return;
+  dismiss(); const ticket=viewerToken;
+  $('viewerTitle').textContent=label||baseName(a.path);
+  $('viewerInfo').textContent=baseName(a.path)+' · '+readableSize(a.size);
+  $('viewMedia').textContent='正在讀取附件…';
+  if (!$('lightbox').open) $('lightbox').showModal();
+  try {
+    const url=await uriFor(id);
+    if (ticket!==viewerToken) {release(url);return;}
+    viewerURL=url;const dl=$('downloadMedia'); dl.href=url;dl.download=baseName(a.path);dl.hidden=false;
+    const canPreview=['image','video','audio'].includes(a.kind);
+    const holder=$('viewMedia');holder.replaceChildren();
+    if (!canPreview) {holder.textContent='此格式可下載後開啟。';return;}
+    const n=el(a.kind==='image'?'img':a.kind);
+    if (a.kind==='image') n.alt=label||baseName(a.path); else n.controls=true;
+    n.onerror=()=>{holder.textContent='瀏覽器無法顯示此格式。可下載檔案，或檢查是否已完整解壓縮典藏 ZIP。';};
+    holder.append(n);n.src=url;
+  } catch (err) {if(ticket===viewerToken)$('viewMedia').textContent='無法開啟：'+err.message;}
+}
+const thumbState=new Map(), thumbQueue=[]; let thumbWorkers=0;
+function disposeThumb(node,state) {
+  state.visible=false;state.serial++;release(state.url);state.url='';node.replaceChildren();node.textContent='相片';
+}
+function resetThumbs() {
+  for (const [n,s] of thumbState) {thumbObserver?.unobserve(n);disposeThumb(n,s);}
+  thumbState.clear();thumbQueue.length=0;
+}
+function drainThumbs() {
+  while (thumbWorkers<3 && thumbQueue.length) {
+    const [node,s,ticket]=thumbQueue.shift();
+    if (!s.visible||s.serial!==ticket||!node.isConnected) continue;
+    thumbWorkers++;
+    (async()=>{
+      try {
+        const url=await uriFor(s.id);
+        if (!s.visible||s.serial!==ticket||!node.isConnected) {release(url);return;}
+        s.url=url;const image=el('img');image.alt=s.label;image.decoding='async';
+        image.onerror=()=>{if(s.serial===ticket)node.textContent='點開檔案';};
+        node.replaceChildren(image);image.src=url;
+      } catch { if(s.serial===ticket)node.textContent='讀取失敗 · 點開核對'; }
+      finally {thumbWorkers--;drainThumbs();}
+    })();
+  }
+}
+function scheduleThumb(n) {
+  const s=thumbState.get(n);if(!s||s.visible)return;s.visible=true;s.serial++;thumbQueue.push([n,s,s.serial]);drainThumbs();
+}
+const thumbObserver=typeof IntersectionObserver==='function'?new IntersectionObserver(changes=>{
+  for(const ch of changes){const s=thumbState.get(ch.target);if(!s)continue;
+    if(ch.isIntersecting)scheduleThumb(ch.target);else if(s.visible)disposeThumb(ch.target,s);
+  }
+},{rootMargin:'260px'}):null;
+function mediaTiles(holder,record) {
+  const gallery=insert(holder,'div','','gallery'), notices=el('div');
+  let pos=0;
+  const more=el('button','更多附件','link-button');
+  function page() {
+    const end=Math.min(pos+12,record.attachments.length);
+    for (;pos<end;pos++) {
+      const ref=record.attachments[pos],issue=issueOf(active.data,ref);
+      if (issue) {
+        const n=insert(notices,'p','','notice small');
+        n.append(document.createTextNode((problems[issue]||issue)+' · '+(ref.label||fixedText(ref.ref)||'未提供路徑')));
+        if (issue==='external'&&webLink(ref.ref)) {n.append(' ');const a=insert(n,'a','開啟外部連結 ↗');a.href=absoluteWeb(ref.ref);a.target='_blank';a.rel='noopener noreferrer';}
+        continue;
+      }
+      const a=active.data.assets[ref.asset], tile=insert(gallery,'button','','tile'),caption=ref.label||baseName(a.path);
+      tile.type='button';tile.title='開啟 '+caption;tile.onclick=()=>openAsset(ref.asset,caption);
+      const thumb=insert(tile,'span',({image:'相片',video:'播放影片',audio:'播放音訊',file:'開啟附件'})[a.kind]||'開啟附件','thumb');
+      insert(tile,'span',caption,'cap');
+      if (a.kind==='image') {
+        thumbState.set(thumb,{id:ref.asset,label:caption,visible:false,serial:0,url:''});
+        if(thumbObserver)thumbObserver.observe(thumb);else setTimeout(()=>scheduleThumb(thumb),0);
+      }
+    }
+    gallery.hidden=!gallery.children.length;more.hidden=pos>=record.attachments.length;
+    more.textContent='顯示更多附件（剩 '+(record.attachments.length-pos)+'）';
+  }
+  holder.append(notices,more);more.onclick=page;page();
+}
+async function originalFile(id) {
+  const s=active.data.sources[id];
+  if (!s||s.problem) {setStatus('這份來源檔案無法讀取。請保留並核對 Facebook 原始 ZIP。');return;}
+  try {
+    if (active.mode==='static') {
+      const a=el('a');a.href=safeFile(s.file,'source');a.download=baseName(s.path);document.body.append(a);a.click();a.remove();
+    } else download(await inspectEntry(active.sources[id],true),baseName(s.path));
+  } catch(err) {setStatus('無法讀取原始檔案：'+err.message);}
+}
+function card(r) {
+  const box=el('article','','post panel'), h=insert(box,'div','','posthead');
+  insert(h,'span',kindNames[r.kind]||'其他紀錄','kind');insert(h,'span',formatTime(r.ts));
+  if(r.title)insert(box,'h3',r.title);
+  for(const t of r.body)insert(box,'p',t,'posttext');
+  if(!r.title&&!r.body.length&&!r.attachments.length&&!r.links.length)insert(box,'p','此筆紀錄的內容可在原始欄位中查看。','muted');
+  if(r.links.length) {
+    const ul=insert(box,'ul','','links');for(const link of r.links){if(!webLink(link.url))continue;const a=insert(insert(ul,'li'),'a',link.label||link.url);
+      a.href=absoluteWeb(link.url);a.target='_blank';a.rel='noopener noreferrer';}
+  }
+  if(r.attachments.length)mediaTiles(box,r);
+  if(r.src!=null) {
+    const d=insert(box,'details','','record');insert(d,'summary','查看來源與原始欄位');
+    d.addEventListener('toggle',()=>{
+      if (!d.open||d.children.length>1) return;
+      const s=active.data.sources[r.src];
+      insert(d,'p',(s?.path||'')+'  ·  '+r.locator,'muted');insert(d,'pre',JSON.stringify(r.raw,null,2));
+      const btn=insert(d,'button','下載這份原始 JSON','link-button');btn.onclick=()=>originalFile(r.src);
+    });
+  } else if(r.kind==='loose')insert(box,'p','匯出資料夾中有這個檔案，未找到能確定對應貼文的紀錄。','small muted');
+  return box;
+}
+function addPage() {
+  const until=Math.min(shown+30,matches.length), fragment=document.createDocumentFragment();
+  for (;shown<until;shown++) fragment.append(card(active.data.items[matches[shown]]));
+  $('items').append(fragment);$('more').hidden=shown===matches.length;
+  $('more').textContent='顯示更多（剩 '+count(matches.length-shown)+' 筆）';
+}
+function refresh() {
+  if(!active)return;clearTimeout(searchTimer);resetThumbs();
+  const terms=normalize($('search').value.trim()).split(/\s+/).filter(Boolean), year=$('year').value, f=$('filter').value, newest=$('order').value==='new', data=active.data;
+  matches=[];
+  data.items.forEach((r,i)=>{
+    if (year && itemYear(r)!==year) return;
+    if (f==='posts'&&!isPost(r)||f==='group'&&r.kind!=='group'||f==='loose'&&r.kind!=='loose') return;
+    if (f==='image'&&!r.attachments.some(a=>a.asset!=null?data.assets[a.asset]?.kind==='image':a.hint==='image')) return;
+    if (f==='need'&&!r.attachments.some(a=>issueOf(data,a))) return;
+    if(terms.length&&!terms.every(t=>searchable[i].includes(t)))return;
+    matches.push(i);
+  });
+  matches.sort((i,j)=>{
+    const a=data.items[i].ts,b=data.items[j].ts;
+    if(a==null||b==null)return a==null?(b==null?i-j:1):-1;
+    return (newest?b-a:a-b)||i-j;
+  });
+  shown=0;$('items').replaceChildren();$('resultCount').textContent=count(matches.length)+' 筆結果';
+  $('clear').hidden=!terms.length&&!year&&!f&&newest;
+  if (!matches.length) insert($('items'),'div',data.items.length?'沒有符合條件的項目。可清除篩選或換一個關鍵字。':'沒有可顯示的紀錄，請查看匯入核對報告。','empty panel');
+  addPage();
+}
+$('more').onclick=addPage;
+$('search').oninput=()=>{clearTimeout(searchTimer);searchTimer=setTimeout(refresh,130);};
+for(const id of ['year','filter','order'])$(id).onchange=refresh;
+function clearFilters() {$('search').value='';$('year').value='';$('filter').value='';$('order').value='new';}
+$('clear').onclick=()=>{clearFilters();refresh();};
+function renderReport() {
+  if(!active)return;
+  const {data}=active, a=audit(data), container=$('reportBody');container.replaceChildren();
+  insert(container,'p','選取檔案或資料夾：'+data.inputs.join('、'),'small');
+  insert(container,'p','貼文 '+count(a.貼文筆數)+' 筆 · 相簿、相片等其他紀錄 '+count(a.其他紀錄筆數)+' 筆 · 未配對媒體 '+count(a.未配對媒體筆數)+' 個');
+  insert(container,'p','找到 '+count(a.可用附件檔數)+' 個本機附件，其中 '+count(a.可用圖片檔數)+' 個是圖片。日期依目前裝置時區顯示。','small');
+  insert(container,'p',a.範圍+' 建議核對一篇最早的貼文與一篇多圖貼文。','small muted');
+  for(const message of data.issues)insert(container,'p',message,'notice small');
+  if(a.附件待核對.length){
+    insert(container,'h3','待核對附件（'+count(a.附件待核對.length)+' 處）');const list=insert(container,'ul','','small');
+    for(const row of a.附件待核對.slice(0,40))insert(list,'li',row.時間+' · '+row.項目+' · '+row.原因+' · '+row.附件);
+    if(a.附件待核對.length>40)insert(container,'p','此處顯示前 40 處，完整清單收在可下載的報告。','small');
+  }
+  const details=insert(container,'details','','record');insert(details,'summary','檢視 '+count(data.sources.length)+' 份來源 JSON');
+  details.ontoggle=()=>{if(!details.open||details.children.length>1)return;
+    const list=insert(details,'ul');data.sources.forEach((s,i)=>{
+      const li=insert(list,'li');insert(li,'span',s.bundle+' ／ '+s.path+' · '+count(s.count)+' 筆'+(s.note?' · '+s.note:'')+' ');
+      if(!s.problem){const b=insert(li,'button','原始檔','link-button');b.onclick=()=>originalFile(i);}
+    });
+  };
+  if(data.otherJSON.length)insert(container,'p','另有 '+count(data.otherJSON.length)+' 個其他類別或未辨識路徑的 JSON，檔名見完整報告，原件在 Facebook 原始 ZIP。','small muted');
+  const b=insert(container,'button','下載完整核對報告','link-button');b.onclick=()=>download(jsonBlob(a),'貼文典藏-核對報告.json');
+}
+$('report').addEventListener('toggle',()=>{if($('report').open)renderReport();});
+function showLibrary(model) {
+  resetThumbs();if($('lightbox').open)$('lightbox').close();active=model;
+  const data=model.data, issues=allProblems(data).length, cautions=data.issues.length+data.sources.filter(s=>s.note&&!s.note.startsWith('與其他')).length;
+  $('start').hidden=true;$('library').hidden=false;$('save').hidden=model.mode!=='input';
+  $('heading').textContent=model.mode==='input'?'貼文預覽':'我的貼文典藏';
+  $('totals').textContent=count(data.items.filter(isPost).length)+' 篇貼文 · '+count(data.assets.filter(a=>a.kind==='image'&&!a.problem).length)+' 個圖片檔';
+  $('reportSummary').textContent='匯入核對報告 · '+count(issues)+' 處附件待核對'+(cautions?' · 有來源提示':'');
+  $('reportBody').replaceChildren();$('report').open=!data.items.length;
+  if($('report').open)renderReport();
+  searchable=data.items.map(r=>normalize([r.title,...r.body,...r.links.flatMap(l=>[l.url,l.label]),...r.attachments.flatMap(a=>[a.label,fixedText(a.ref),a.asset==null?'':data.assets[a.asset]?.path||'']),...stringsIn(r.raw)].join('\n')));
+  const years=[...new Set(data.items.map(itemYear))].sort((a,b)=>a==='?'?1:b==='?'?-1:Number(b)-Number(a));
+  $('year').replaceChildren(new Option('所有年份',''));for(const y of years)$('year').add(new Option(y==='?'?'日期未提供':y,y));
+  clearFilters();refresh();
+}
+async function tryBundle(entries) {
+  for(const index of entries.filter(e=>/^index\.html$/i.test(baseName(e.path)))) {
+    let html;
+    try { html=await (await inspectEntry(index,true)).text(); }
+    catch { continue; } // A damaged or unrelated index.html must not hide usable Facebook JSON.
+    const at=html.indexOf(payloadTag), end=at<0?-1:html.indexOf(endScript,at+payloadTag.length);
+    if(at<0||end<0)continue;
+    const payload=html.slice(at+payloadTag.length,end);
+    if(payload==='null'||!payload.includes(archiveFormat))continue;
+    const data=dataCheck(JSON.parse(payload)), root=index.path.slice(0,-'index.html'.length);
+    const byPath=new Map(entries.filter(e=>e.source===index.source).map(e=>[e.path,e]));
+    const assets=data.assets.map(a=>{const e=byPath.get(root+safeFile(a.file,'asset'));if(!e&&!a.problem)a.problem='典藏包中缺少此檔';return e;});
+    const sources=data.sources.map(s=>{const e=byPath.get(root+safeFile(s.file,'source'));if(!e&&!s.problem){s.problem='典藏包中缺少此檔';data.issues.push(s.path+'：'+s.problem);}return e;});
+    return {mode:'bundle',data,assets,sources};
+  }
+  return null;
+}
+async function openInputs(files,folder) {
+  if(!files.length||busy)return;
+  lock(true);let model;
+  try {
+    setStatus('正在讀取檔案清單…');await nextFrame();
+    const inputs=[], entries=[], issues=[];
+    if(folder) {
+      inputs.push(files[0].webkitRelativePath.split('/')[0]||'已解壓資料夾');
+      for(const f of files) entries.push(looseEntry(f,f.webkitRelativePath||f.name,0));
+    } else {
+      for(const [i,f] of files.entries()) {
+        inputs.push(f.name);setStatus('正在讀取 '+f.name);
+        try {for(const e of await listZip(f,i))entries.push(e);}
+        catch(err){issues.push(f.name+'：'+err.message);}
+      }
+    }
+    if(!entries.length)throw Error(issues.join(' ／ ')||'沒有讀到檔案');
+    model=await tryBundle(entries);
+    if(model && (issues.length||(!folder && files.length>1))) {
+      model.data.issues.push(...issues,'已開啟既有典藏。若要建立新典藏，請另開一份並只選同一次 Facebook 匯出的 ZIP。');
+    }
+    if(!model)model=await loadFacebook(entries,inputs,issues,setStatus);
+    showLibrary(model);setStatus(model.mode==='input'?'預覽完成。請按「儲存離線典藏 ZIP」建立可攜副本。':'已開啟離線典藏。');
+  } catch(err){setStatus('無法開啟：'+err.message);}
+  finally{lock(false);$('zipInput').value='';$('folderInput').value='';}
+}
+$('chooseZip').onclick=()=>$('zipInput').click();$('chooseFolder').onclick=()=>$('folderInput').click();
+$('zipInput').onchange=e=>openInputs(Array.from(e.target.files),false);$('folderInput').onchange=e=>openInputs(Array.from(e.target.files),true);
+$('back').onclick=()=>{resetThumbs();if($('lightbox').open)$('lightbox').close();active=null;searchable=[];matches=[];$('items').replaceChildren();$('reportBody').replaceChildren();$('library').hidden=true;$('start').hidden=false;setStatus('');window.scrollTo(0,0);};
+async function saveArchive() {
+  if(busy||!active||active.mode!=='input')return;
+  lock(true);const src=active;let stream=null;
+  try {
+    const name='Facebook-貼文典藏-'+stamp()+'.zip';
+    if(typeof window.showSaveFilePicker==='function'){
+      try {
+        const handle=await window.showSaveFilePicker({suggestedName:name,types:[{description:'離線貼文典藏',accept:{'application/zip':['.zip']}}]});
+        if (src.data.inputs.includes(handle.name)) throw Error('請使用新的檔名儲存典藏，保留原始 Facebook ZIP。');
+        stream=await handle.createWritable();
+      } catch(err) {
+        if(err.name==='AbortError'){setStatus('已取消儲存，可以繼續檢索貼文。');return;}
+        if(!['SecurityError','NotAllowedError','TypeError','NotSupportedError'].includes(err.name))throw err;
+      }
+    }
+    const copy={...src.data,assets:src.data.assets.map(a=>({...a})),sources:src.data.sources.map(s=>({...s})),issues:[...src.data.issues],created:new Date().toISOString()};
+    const writer=new ZipWriter(stream);
+    const work=[...copy.assets.map((meta,i)=>[meta,src.assets[i]]),...copy.sources.map((meta,i)=>[meta,src.sources[i]])];
+    let damaged=0;
+    for(const [i,[meta,entry]] of work.entries()){
+      setStatus('正在校驗並封存檔案 '+(i+1)+' / '+work.length+' · '+baseName(meta.path));
+      try {await inspectEntry(entry);}
+      catch(err){meta.problem=err.message;damaged++;copy.issues.push(meta.path+'：'+err.message);continue;}
+      // Only per-entry source failures are recoverable. A write failure aborts the entire new file.
+      await writer.add(meta.file,entry);
+      if(i%12===0)await nextFrame();
+    }
+    setStatus('正在寫入離線索引與核對報告…');
+    await writer.add('report.json',looseEntry(jsonBlob(audit(copy)),'report.json',0));
+    await writer.add('index.html',looseEntry(makeIndex(copy),'index.html',0));
+    const result=await writer.finish();stream=null;
+    if(result)download(result,name);
+    if(damaged) {
+      src.data=copy;
+      showLibrary(src);
+    }
+    const unresolved=allProblems(copy).length;
+    setStatus('典藏 ZIP '+(result?'已送交瀏覽器下載':'已儲存')+'。可用本工具重開，或完整解壓後開啟 index.html。'+(unresolved||damaged?' 待核對附件 '+unresolved+' 處，讀取失敗檔案 '+damaged+' 個，詳見包內 report.json。':''));
+  }catch(err){
+    if(stream)await stream.abort().catch(()=>{});
+    setStatus('未完成儲存：'+err.message+'。可重新選擇儲存位置並再試一次。');
+  }finally{lock(false);}
+}
+$('save').onclick=saveArchive;
+if(embedded!=='null'){
+  try{showLibrary({data:dataCheck(JSON.parse(embedded)),mode:'static'});}
+  catch(err){setStatus('典藏索引無法開啟：'+err.message);}
+}
+
+</script>
+</body>
+</html>
