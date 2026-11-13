@@ -1,50 +1,680 @@
 <!doctype html>
 <html lang="zh-Hant-TW">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' file: content: blob:; media-src 'self' file: content: blob:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
-<title>貼文典藏｜Facebook 離線保存工具</title>
-<style>
-:root{--paper:#f5f3eb;--card:#fffdf6;--ink:#20382f;--muted:#53635a;--green:#1f5542;--line:#c9cfc0;--gold:#d8ac65;--warn:#783b12;--soft:#e6ebdf;--serif:"PT Serif","Noto Serif CJK TC","Songti TC",PMingLiU,serif;--sans:"DM Sans","Noto Sans CJK TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.62}button,input,select{font:inherit;color:inherit}a{color:var(--green);overflow-wrap:anywhere}button,.button{border:1px solid var(--line);border-radius:7px;background:var(--card);padding:.62em 1em;cursor:pointer;font-weight:650;text-decoration:none}button:hover,.button:hover{background:var(--soft)}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid #af661d;outline-offset:3px}button:disabled{opacity:.5;cursor:wait}.primary{background:var(--green);color:white;border-color:var(--green)}.primary:hover{background:#174331}.link-button{background:transparent;border:0;padding:.25em 0;color:var(--green);text-decoration:underline;text-underline-offset:.2em}[hidden]{display:none!important}
-.wrap{max-width:1090px;margin:auto;padding:0 38px}.mast{border-bottom:1px solid var(--line)}.mast .wrap{height:69px;display:flex;align-items:center;justify-content:space-between}.brand{font-weight:750;letter-spacing:.06em;display:flex;align-items:center;gap:12px}.mark{display:inline-block;position:relative;width:28px;height:30px;background:var(--green);border-radius:4px}.mark:before,.mark:after{content:"";position:absolute;left:6px;right:6px;height:5px;border:1px solid #d3dbca;border-top-width:2px;border-radius:1px}.mark:before{top:6px}.mark:after{top:16px}.mast small{color:var(--muted);font-size:.84rem}.intro{padding:48px 0 24px}.intro h1{font:650 clamp(2.1rem,6vw,3.55rem)/1.14 var(--serif);letter-spacing:.025em;margin:0 0 12px}.intro p{margin:0;color:var(--muted);font-size:1.04rem}.startgrid{display:grid;grid-template-columns:1.13fr .87fr;gap:20px;align-items:stretch}.importbox,.guide,.panel{border:1px solid var(--line);border-radius:13px;background:var(--card)}.importbox,.guide{padding:27px 29px}.importbox{border-top:4px solid var(--green);padding-top:24px}.guide{background:#ebeee3}.guide ol{margin:.7rem 0 0;padding-left:1.4rem}.guide li+li{margin-top:7px}.guide a{display:inline-block;margin-top:10px;font-size:.86rem}.importbox h2,.guide h2,.panel h2{font:650 1.34rem/1.4 var(--serif);margin:0 0 8px}.muted,.filemeta{color:var(--muted)}.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.importbox .actions{margin:22px 0 11px}.importbox p,.guide p{margin:.25rem 0}.small{font-size:.86rem}.status{min-height:1.5em;margin:15px 0;color:var(--green);font-weight:600;overflow-wrap:anywhere}.status:empty{min-height:0;margin:0}.workhead{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;padding:32px 0 20px;flex-wrap:wrap}.workhead h1{font:650 clamp(1.8rem,5vw,2.7rem)/1.25 var(--serif);margin:0 0 5px}.workhead p{margin:0}.filters{padding:18px 20px;display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px}.filters label{display:grid;gap:2px;font-size:.84rem;color:var(--muted);font-weight:600}.filters .searchwrap{flex:3 1 230px}.filters input,.filters select{border:1px solid #adb8a9;border-radius:5px;background:#fffefa;padding:.45em .65em;min-height:42px;font-size:.95rem;max-width:100%;width:100%}.filters select{cursor:pointer}.filters .pick{flex:1 1 105px}.resultshead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:21px 0 11px}.resultshead h2{font:650 1.3rem var(--serif);margin:0}.report{margin:15px 0}.report>summary,.record>summary{cursor:pointer;color:var(--green);font-weight:650}.report>summary{padding:13px 19px}.reportbox{border-top:1px solid var(--line);padding:16px 19px;overflow-wrap:anywhere}.reportbox p{margin:.4em 0}.reportbox ul{padding-left:1.5rem}.reportbox li{margin:.33em 0}.warning{color:var(--warn)}.notice{background:#f7ebd6;border-left:3px solid #ba8a48;padding:10px 13px;border-radius:3px;overflow-wrap:anywhere}.items{display:grid;gap:12px}.post{padding:19px 23px;min-width:0}.posthead{display:flex;justify-content:space-between;align-items:center;gap:12px;color:var(--muted);font-size:.82rem}.kind{display:inline-block;color:var(--green);background:var(--soft);padding:2px 9px;border-radius:4px}.post h3{font-size:1.07rem;line-height:1.5;margin:11px 0 4px}.posttext{white-space:pre-wrap;overflow-wrap:anywhere;margin:.5em 0}.links{overflow-wrap:anywhere;padding-left:1.3rem}.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:8px;max-width:800px;margin:12px 0}.tile{padding:0;overflow:hidden;text-align:left;position:relative;display:flex;flex-direction:column;min-width:0;border-radius:6px;background:#eff1e9}.tile .thumb{height:132px;display:grid;place-items:center;width:100%;color:var(--muted);font-size:.83rem}.thumb img{width:100%;height:100%;max-height:132px;object-fit:cover}.tile .cap{padding:5px 8px;font-size:.79rem;font-weight:500;width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.record{margin:12px 0 0;font-size:.84rem}.record pre{white-space:pre-wrap;word-break:break-word;background:#eeefe7;padding:12px;border-radius:5px;max-height:22rem;overflow:auto}.record p{overflow-wrap:anywhere}.empty{padding:24px;text-align:center}.more{display:block;margin:18px auto 36px}.footer{border-top:1px solid var(--line);margin:34px 0 20px;padding-top:14px;font-size:.82rem;color:var(--muted)}dialog{width:min(900px,94vw);max-height:92vh;overflow:auto;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink)}dialog::backdrop{background:#15251fd4}.dialoghead{display:flex;align-items:center;justify-content:space-between;gap:10px}.dialoghead h2{font-size:1rem;overflow-wrap:anywhere;margin:0}.viewmedia{min-height:100px;display:grid;place-items:center;margin:12px 0}.viewmedia img,.viewmedia video{max-width:100%;max-height:65vh;object-fit:contain}.viewmedia audio{width:100%}.dialogfoot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.dialogfoot p{margin:0;font-size:.9rem;overflow-wrap:anywhere}
-@media(max-width:730px){.wrap{padding:0 18px}.mast .wrap{height:56px}.intro{padding:35px 0 18px}.startgrid{grid-template-columns:1fr;gap:12px}.importbox,.guide{padding:18px}.filters{padding:12px;gap:8px}.filters .searchwrap{flex-basis:100%}.filters .pick{flex-basis:25%;min-width:85px}.workhead{align-items:flex-start;padding:22px 0 14px}.post{padding:15px}.gallery{grid-template-columns:repeat(auto-fill,minmax(92px,1fr))}.tile .thumb,.thumb img{height:95px}.workhead .actions{gap:7px}.button,button{padding:.52em .8em}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'none';
+    script-src 'unsafe-inline';
+    style-src 'unsafe-inline';
+    img-src 'self' file: content: blob: data:;
+    media-src 'self' file: content: blob:;
+    connect-src 'none';
+    object-src 'none';
+    base-uri 'none';
+    form-action 'none'
+  ">
+  <title>貼文典藏｜Facebook 離線保存工具</title>
+  <meta name="description" data-i18n-attr="content" content="在自己的裝置上依年份或關鍵字查閱 Facebook 貼文、相片與附件。">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f0f2f5;
+      --surface: #ffffff;
+      --text: #080809;
+      --muted: #65686c;
+      --rule: #dadde1;
+      --soft: #e2e5e9;
+      --soft-hover: #d8dadf;
+      --hover: #f2f2f2;
+      --accent: #0866ff;
+      --accent-hover: #0759e0;
+      --accent-text: #0064d1;
+      --accent-soft: #ebf5ff;
+      --placeholder: #e4e6eb;
+      --notice-bg: #fff4e0;
+      --notice-rule: #d98e1f;
+      --shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+      --pop: 0 12px 28px rgb(0 0 0 / 0.2), 0 2px 4px rgb(0 0 0 / 0.1);
+      --sans: system-ui, -apple-system, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --bg: #18191a;
+        --surface: #242526;
+        --text: #e4e6eb;
+        --muted: #b0b3b8;
+        --rule: #3e4042;
+        --soft: #3a3b3c;
+        --soft-hover: #4e4f50;
+        --hover: #3a3b3c;
+        --accent-hover: #2d7bff;
+        --accent-text: #4599ff;
+        --accent-soft: #263951;
+        --placeholder: #3a3b3c;
+        --notice-bg: #3b301d;
+        --notice-rule: #c58a2c;
+        --shadow: 0 1px 2px rgb(0 0 0 / 0.4);
+        --pop: 0 12px 28px rgb(0 0 0 / 0.5), 0 2px 4px rgb(0 0 0 / 0.3);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 0.9375rem/1.4 var(--sans); }
+    h1, h2, h3, p { margin: 0; }
+    a { color: var(--accent-text); overflow-wrap: anywhere; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    button, input, select { font: inherit; color: inherit; }
+    button, summary, select { cursor: pointer; }
+    button, .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 36px;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 6px;
+      background: var(--soft);
+      color: var(--text);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .primary { background: var(--accent); color: #fff; }
+    button:disabled { opacity: 0.55; cursor: wait; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .link-button { min-height: 0; padding: 0; background: none; color: var(--accent-text); font-weight: 400; }
+    .round { width: 36px; height: 36px; padding: 0; border-radius: 50%; font-size: 1.1rem; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    .skip { position: fixed; z-index: 5; top: 8px; left: 8px; padding: 8px 16px; transform: translateY(-160%); background: var(--surface); }
+    .skip:focus { transform: none; }
+    .wrap { width: min(100%, 76rem); margin-inline: auto; padding-inline: clamp(16px, 4vw, 48px); }
+    .small { font-size: 0.8125rem; }
+    .muted { color: var(--muted); }
+    input[type="search"], select {
+      width: 100%;
+      min-width: 0;
+      min-height: 40px;
+      padding: 0 14px;
+      border: 1px solid transparent;
+      border-radius: 20px;
+      background: var(--soft);
+      color: var(--text);
+    }
+    select { border-radius: 6px; }
+
+    /* 頂端工具列 */
+    .mast { position: sticky; top: 0; z-index: 3; background: var(--surface); box-shadow: var(--shadow); }
+    .mast .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; min-height: 56px; padding-block: 8px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-size: 1.05rem; font-weight: 700; }
+    .mark { position: relative; flex: none; width: 30px; height: 32px; border-radius: 8px; background: var(--accent); }
+    .mark::before, .mark::after { content: ""; position: absolute; left: 7px; width: 14px; height: 9px; border: 1.5px solid #fff; border-radius: 2px; }
+    .mark::before { top: 7px; }
+    .mark::after { top: 12px; left: 10px; background: var(--accent); }
+    .mast small { margin-left: auto; color: var(--muted); font-size: 0.8125rem; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-left: auto; }
+    .langpick select { width: auto; min-height: 36px; padding-inline: 10px; font-size: 0.875rem; font-weight: 600; }
+    #reportSummary { color: var(--muted); font-weight: 400; }
+
+    /* 匯入頁 */
+    .start-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.06fr) minmax(0, 1fr);
+      align-items: center;
+      gap: clamp(32px, 6vw, 88px);
+      padding-block: clamp(36px, 6vw, 90px);
+    }
+    .intro h1 { font: 700 clamp(2.4rem, 5vw, 4.25rem)/1.08 var(--sans); letter-spacing: -0.02em; }
+    .intro h1 span { display: block; }
+    .intro h1 span:first-child { color: var(--accent); }
+    .intro > p:not(.small) { max-width: 30em; margin-top: 18px; color: var(--muted); font-size: clamp(1rem, 1.4vw, 1.2rem); line-height: 1.5; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .intro .actions { margin: 24px 0 12px; }
+    .intro .actions button { min-height: 44px; padding-inline: 18px; font-size: 1rem; }
+    .intro .small { max-width: 34em; color: var(--muted); line-height: 1.5; }
+    .cover { margin: 0; overflow: hidden; border-radius: 8px; background: var(--surface); box-shadow: var(--pop); }
+    .cover img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; }
+    .guide { margin-bottom: 24px; padding: 16px 20px; border-radius: 8px; background: var(--surface); box-shadow: var(--shadow); line-height: 1.6; }
+    .guide summary { font-size: 1.0625rem; font-weight: 700; }
+    .guide ol { margin: 12px 0 8px; padding-inline-start: 1.5rem; }
+    .guide li + li { margin-top: 3px; }
+    .status { margin-block: 16px; color: var(--muted); font-size: 0.875rem; overflow-wrap: anywhere; }
+    .status:empty { margin: 0; }
+    .footer-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 6px 18px;
+      margin: 24px 0 32px;
+      color: var(--muted);
+      font-size: 0.8125rem;
+    }
+    .cover-credit a { color: inherit; }
+    body:has(#start[hidden]) .cover-credit { display: none; }
+
+    /* 個人檔案標頭 */
+    .page { width: min(100%, 1100px); margin-inline: auto; padding-inline: 16px; }
+    .profile-head { background: var(--surface); box-shadow: var(--shadow); }
+    .profile-head .page { padding-inline: 0; }
+    .profile-cover {
+      aspect-ratio: 2.7 / 1;
+      overflow: hidden;
+      border-radius: 0 0 8px 8px;
+      background: linear-gradient(180deg, var(--placeholder), var(--soft));
+    }
+    .profile-cover img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .identity { display: flex; align-items: flex-end; gap: 16px; padding: 0 32px 16px; }
+    .identity .who { flex: 1; min-width: 0; padding-bottom: 8px; }
+    .identity h1 { font-size: 2rem; font-weight: 700; line-height: 1.2; overflow-wrap: anywhere; }
+    .identity .who p { margin-top: 4px; font-weight: 600; }
+    .identity-actions { padding-bottom: 8px; }
+    .avatar {
+      display: inline-grid;
+      flex: none;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      overflow: hidden;
+      border-radius: 50%;
+      background: var(--soft);
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .avatar.big { width: 168px; height: 168px; margin-top: -84px; border: 4px solid var(--surface); font-size: 4rem; }
+    .avatar.small { width: 32px; height: 32px; font-size: 0.875rem; }
+    .tabs, .subtabs { display: flex; gap: 4px; overflow-x: auto; }
+    .tabs { margin: 0 32px; border-top: 1px solid var(--rule); }
+    .subtabs { margin: 4px 0 16px; border-bottom: 1px solid var(--rule); }
+    .tabs button, .subtabs button { flex: none; min-height: 56px; padding: 0 16px; border-radius: 0; background: none; color: var(--muted); }
+    .subtabs button { min-height: 48px; }
+    .tabs [aria-selected="true"], .subtabs [aria-selected="true"] { color: var(--accent-text); box-shadow: inset 0 -3px var(--accent); }
+
+    /* 貼文頁：左欄與動態牆 */
+    .columns { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); align-items: start; gap: 16px; padding-block: 16px; }
+    .side, .feed { display: grid; gap: 16px; min-width: 0; }
+    .card { padding: 12px 16px; border-radius: 8px; background: var(--surface); box-shadow: var(--shadow); }
+    .card h2 { font-size: 1.25rem; font-weight: 700; line-height: 1.3; }
+    .cardhead { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+    .side .card > h2 { margin-bottom: 12px; }
+    .intro-bio { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--rule); text-align: center; white-space: pre-wrap; }
+    .facts { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+    .facts li { display: flex; align-items: center; gap: 12px; }
+    .facts svg { flex: none; width: 20px; height: 20px; fill: var(--muted); }
+    .grid9 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; overflow: hidden; border-radius: 8px; }
+    .friends9 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 8px; margin-top: 12px; }
+    .friend-mini { display: grid; gap: 4px; min-width: 0; font-size: 0.8125rem; font-weight: 600; line-height: 1.25; overflow-wrap: anywhere; }
+    .face {
+      display: grid;
+      place-items: center;
+      aspect-ratio: 1;
+      border-radius: 8px;
+      background: var(--soft);
+      color: var(--muted);
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+    .feedhead { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .filter-summary { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; color: var(--muted); }
+    .items { display: grid; gap: 16px; }
+    .more { display: flex; margin: 4px auto 16px; }
+    .empty { padding: 28px 16px; color: var(--muted); text-align: center; }
+
+    /* 貼文卡片 */
+    .post { --gutter: 16px; padding: 12px var(--gutter); overflow-wrap: anywhere; }
+    .posthead { display: flex; align-items: flex-start; gap: 8px; }
+    .posthead .who { flex: 1; min-width: 0; }
+    .byline { line-height: 1.35; }
+    .byline strong { font-weight: 600; }
+    .when { margin-top: 2px; color: var(--muted); font-size: 0.8125rem; }
+    .posttext { margin-top: 12px; font-size: 0.9375rem; line-height: 1.45; white-space: pre-wrap; }
+    .posttext.clamp { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 5; }
+    .seemore { margin-top: 2px; color: var(--text); font-weight: 600; }
+    .postmenu { position: relative; flex: none; }
+    .postmenu summary {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      color: var(--muted);
+      font-size: 1.25rem;
+      font-weight: 700;
+      list-style: none;
+    }
+    .postmenu summary::-webkit-details-marker { display: none; }
+    .menu { position: absolute; top: 40px; right: 0; z-index: 2; display: grid; min-width: 220px; padding: 8px; border-radius: 8px; background: var(--surface); box-shadow: var(--pop); }
+    .menu button { justify-content: flex-start; background: none; font-weight: 500; }
+
+    /* 相片照 FB 的排法：1 張依原比例，3 張一大兩小，5 張上二下三 */
+    .gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px; margin: 12px calc(0px - var(--gutter, 0px)) 0; }
+    .tile { position: relative; display: block; min-width: 0; min-height: 0; padding: 0; overflow: hidden; border-radius: 0; background: var(--placeholder); }
+    .tile:focus-visible { z-index: 1; outline-offset: -3px; }
+    .thumb { display: grid; place-items: center; width: 100%; aspect-ratio: 1; overflow: hidden; color: var(--muted); font-size: 0.8125rem; }
+    .thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .gallery[data-count="1"] { grid-template-columns: minmax(0, 1fr); }
+    .gallery[data-count="1"] .thumb { aspect-ratio: var(--photo-ratio, 3 / 2); max-height: min(78vh, 50rem); }
+    .gallery[data-count="1"] img { object-fit: contain; }
+    .gallery[data-count="3"] { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); grid-template-rows: repeat(2, minmax(0, 1fr)); aspect-ratio: 1.7; }
+    .gallery[data-count="3"] > :first-child { grid-row: span 2; }
+    .gallery[data-count="3"] .thumb { height: 100%; aspect-ratio: auto; }
+    .gallery[data-count="5"] { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .gallery[data-count="5"] > :nth-child(-n + 2) { grid-column: span 3; }
+    .gallery[data-count="5"] > :nth-child(n + 3) { grid-column: span 2; }
+    .overflow { position: absolute; inset: 0; display: grid; place-items: center; background: rgb(0 0 0 / 0.45); color: #fff; font-size: 2rem; font-weight: 700; }
+    .video-tile {
+      flex-direction: column;
+      gap: 8px;
+      width: calc(100% + 2 * var(--gutter, 0px));
+      margin: 12px calc(0px - var(--gutter, 0px)) 0;
+      aspect-ratio: 16 / 9;
+      border-radius: 0;
+      background: #000;
+      color: #fff;
+    }
+    .play { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: rgb(255 255 255 / 0.2); font-size: 1.75rem; }
+    .inline-video { display: block; width: calc(100% + 2 * var(--gutter, 0px)); max-height: 80vh; margin: 12px calc(0px - var(--gutter, 0px)) 0; background: #000; }
+    .file-list { display: grid; gap: 6px; margin-top: 12px; }
+    .file-tile { justify-content: flex-start; gap: 12px; min-width: 0; text-align: left; }
+    .filekind { flex: none; color: var(--accent-text); }
+    .filename { min-width: 0; color: var(--muted); font-weight: 500; overflow-wrap: anywhere; }
+    .notice { margin-top: 12px; padding: 8px 12px; border-inline-start: 3px solid var(--notice-rule); border-radius: 4px; background: var(--notice-bg); font-size: 0.875rem; overflow-wrap: anywhere; }
+    .shared { margin-top: 12px; padding: 12px; border: 1px solid var(--rule); border-radius: 8px; }
+    .linkcard { display: grid; gap: 2px; margin-top: 12px; padding: 10px 12px; border-radius: 8px; background: var(--bg); color: var(--text); }
+    .shared .linkcard { margin-top: 8px; }
+    .linkcard:hover { background: var(--hover); text-decoration: none; }
+    .linkcard .host { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; }
+    .linkcard strong { font-weight: 600; overflow-wrap: anywhere; }
+
+    /* 匯出檔有提供時才出現的留言與心情 */
+    .thread { margin-top: 12px; padding-top: 4px; border-top: 1px solid var(--rule); }
+    .thread > summary { display: flex; align-items: center; min-height: 40px; color: var(--muted); list-style: none; }
+    .thread > summary::-webkit-details-marker { display: none; }
+    .reaction-filters { display: flex; flex-wrap: wrap; gap: 6px; margin-block: 8px 12px; }
+    .reaction-filters button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent-text); }
+    .people { margin: 0; padding: 0; list-style: none; }
+    .people li { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--rule); }
+    .comment { display: flex; gap: 8px; margin-block: 8px; }
+    .comment > div { min-width: 0; }
+    .bubble { display: inline-block; max-width: 100%; padding: 8px 12px; border-radius: 18px; background: var(--bg); }
+    .bubble strong { display: block; font-size: 0.8125rem; font-weight: 600; }
+    .bubble .posttext { margin-top: 2px; }
+    .comment .gallery, .activity-row .gallery { max-width: 240px; margin: 8px 0 0; overflow: hidden; border-radius: 12px; }
+
+    /* 相片與朋友分頁 */
+    .panel-wide { margin-block: 16px; }
+    .panel-wide > h2 { margin-bottom: 4px; }
+    .albumbar { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .albumbar h3 { font-size: 1.0625rem; }
+    .photogrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
+    .photogrid .tile { border-radius: 8px; }
+    .albumgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(180px, 45%), 1fr)); gap: 16px 12px; }
+    .album { display: grid; align-content: start; gap: 4px; min-height: 0; padding: 0; background: none; font-weight: 400; text-align: left; }
+    .album .thumb { border-radius: 8px; background: var(--placeholder); }
+    .album strong { font-weight: 600; }
+    .vcell { flex-direction: column; gap: 8px; min-height: 0; aspect-ratio: 1; border-radius: 8px; background: #000; color: #fff; }
+    .friendgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr)); gap: 8px; }
+    .friend { display: flex; align-items: center; gap: 16px; padding: 12px; border: 1px solid var(--rule); border-radius: 8px; }
+    .friend .face { flex: none; width: 72px; }
+    .friend strong { display: block; font-size: 1.0625rem; font-weight: 600; overflow-wrap: anywhere; }
+    .searchbox { width: min(240px, 50%); }
+
+    /* 活動紀錄 */
+    .activity { display: grid; grid-template-columns: 300px minmax(0, 1fr); align-items: start; gap: 16px; padding-block: 16px; }
+    .activity-nav { position: sticky; top: 72px; display: grid; gap: 8px; }
+    [tabindex="-1"]:focus { outline: none; }
+    .activity-nav h1 { font-size: 1.5rem; font-weight: 700; }
+    .activity-nav .link-button { justify-self: start; }
+    .kinds { display: grid; gap: 2px; margin-top: 4px; }
+    .kinds button { justify-content: space-between; width: 100%; background: none; }
+    .kinds [aria-pressed="true"] { background: var(--accent-soft); color: var(--accent-text); }
+    .activity-main, .activity-list { display: grid; gap: 8px; min-width: 0; }
+    .activity-main .searchbox { width: 100%; }
+    .day { margin: 12px 4px 0; font-size: 1.0625rem; font-weight: 700; }
+    .activity-row { display: flex; gap: 12px; }
+    .activity-icon { display: grid; flex: none; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--soft); font-size: 1.25rem; }
+    .activity-body { display: grid; flex: 1; gap: 4px; min-width: 0; }
+    .activity-title { font-weight: 600; }
+    .activity-quote { padding: 8px 12px; border-radius: 12px; background: var(--bg); white-space: pre-wrap; }
+
+    /* 對話框 */
+    dialog {
+      width: min(560px, calc(100vw - 32px));
+      max-height: calc(100dvh - 32px);
+      padding: 0;
+      overflow: auto;
+      border: 0;
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: var(--pop);
+    }
+    dialog::backdrop { background: rgb(0 0 0 / 0.55); }
+    #reportDialog { width: min(760px, calc(100vw - 32px)); }
+    #rawDialog { width: min(820px, calc(100vw - 32px)); }
+    .dialoghead {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 60px;
+      padding: 0 56px;
+      border-bottom: 1px solid var(--rule);
+      background: var(--surface);
+    }
+    .dialoghead h2 { font-size: 1.25rem; font-weight: 700; text-align: center; }
+    .dialoghead .round { position: absolute; top: 12px; right: 12px; }
+    .dialogbody { padding: 16px; }
+    .dialogfoot { display: flex; justify-content: flex-end; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--rule); }
+    .filter-fields { display: grid; gap: 14px; }
+    .filter-fields label { display: grid; gap: 6px; font-weight: 600; }
+    .reportbox { line-height: 1.5; overflow-wrap: anywhere; }
+    .reportbox p, .reportbox li { margin-top: 0.4em; }
+    .reportbox h3 { margin: 0.8em 0 0; font-size: 1rem; }
+    .reportbox ul { padding-inline-start: 1.15rem; }
+    .reportbox details { margin-top: 12px; }
+    .reportbox summary { color: var(--accent-text); font-weight: 600; }
+    #rawBody { max-height: 60dvh; margin: 8px 0 12px; padding: 12px; overflow: auto; border-radius: 6px; background: var(--bg); font-size: 0.8125rem; white-space: pre-wrap; }
+
+    /* 大圖檢視器 */
+    #lightbox { width: 100vw; height: 100vh; height: 100dvh; max-width: none; max-height: none; margin: 0; overflow: hidden; border-radius: 0; background: #000; }
+    #lightbox[open] { display: grid; grid-template-columns: minmax(0, 1fr) 360px; }
+    #lightbox::backdrop { background: #000; }
+    .stage { position: relative; display: grid; place-items: center; min-height: 0; background: #000; }
+    .viewmedia { display: grid; place-items: center; width: 100%; height: 100%; min-height: 0; padding: 56px 64px; color: #e4e6eb; }
+    .viewmedia img, .viewmedia video { display: block; max-width: 100%; max-height: calc(100dvh - 112px); object-fit: contain; }
+    .viewmedia audio { width: 100%; }
+    .stage .round { position: absolute; z-index: 1; width: 44px; height: 44px; background: rgb(255 255 255 / 0.14); color: #fff; font-size: 1.4rem; }
+    .viewer-close { top: 12px; left: 12px; }
+    .viewer-prev { top: 50%; left: 12px; transform: translateY(-50%); }
+    .viewer-next { top: 50%; right: 12px; transform: translateY(-50%); }
+    .viewer-side { display: grid; align-content: start; gap: 12px; padding: 16px; overflow-y: auto; background: var(--surface); color: var(--text); }
+    .viewer-side .posttext { margin: 0; }
+    .viewer-side .posttext:empty { display: none; }
+    .viewer-side .button { justify-self: start; }
+
+    @media (max-width: 900px) {
+      .columns, .activity { grid-template-columns: minmax(0, 1fr); }
+      .identity { flex-direction: column; align-items: center; padding-inline: 16px; text-align: center; }
+      .identity .who, .identity-actions { padding-bottom: 0; }
+      .tabs { margin-inline: 16px; }
+      .activity-nav { position: static; }
+      #lightbox[open] { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
+      .viewer-side { max-height: 40dvh; }
+      .viewmedia { padding: 64px 8px 8px; }
+      .viewmedia img, .viewmedia video { max-height: calc(60dvh - 72px); }
+    }
+
+    @media (max-width: 42rem) {
+      .start-layout { grid-template-columns: minmax(0, 1fr); gap: 22px; padding-block: 28px; }
+      .intro h1 span { display: inline; }
+      .intro h1 { font-size: clamp(2.1rem, 7vw, 3rem); }
+      .intro > p:not(.small) { margin-top: 12px; font-size: 1rem; }
+      .cover img { aspect-ratio: 2 / 1; }
+    }
+
+    @media (max-width: 600px) {
+      .page { padding-inline: 0; }
+      .card, .profile-cover { border-radius: 0; }
+      .avatar.big { width: 136px; height: 136px; margin-top: -68px; font-size: 3rem; }
+      .identity h1 { font-size: 1.6rem; }
+      .mast small { display: none; }
+      .toolbar { width: 100%; margin-left: 0; }
+      .brand { order: -2; }
+      .langpick { order: -1; margin-left: auto; }
+      .toolbar button { flex: 1 1 auto; padding-inline: 8px; font-size: 0.8125rem; }
+      .cardhead:has(.searchbox) { flex-wrap: wrap; }
+      .searchbox { width: 100%; }
+      .photogrid { gap: 2px; }
+      .photogrid .tile { border-radius: 0; }
+      .intro .actions { display: grid; }
+    }
+
+    @media (hover: hover) {
+      button:not(:disabled):hover, .button:hover { background: var(--soft-hover); }
+      button.primary:not(:disabled):hover { background: var(--accent-hover); }
+      button.link-button:not(:disabled):hover { background: none; text-decoration: underline; }
+      .tabs button:not([aria-selected="true"]):not(:disabled):hover,
+      .subtabs button:not([aria-selected="true"]):not(:disabled):hover,
+      .kinds button:not([aria-pressed="true"]):not(:disabled):hover,
+      .menu button:not(:disabled):hover,
+      .postmenu summary:hover { background: var(--hover); }
+      .tabs button[aria-selected="true"]:hover, .subtabs button[aria-selected="true"]:hover, button.album:not(:disabled):hover { background: none; }
+      button.tile:not(:disabled):hover { background: var(--placeholder); filter: brightness(0.94); }
+      .stage button.round:not(:disabled):hover { background: rgb(255 255 255 / 0.26); }
+      button.video-tile:not(:disabled):hover, button.vcell:not(:disabled):hover { background: #111; }
+      .thread > summary:hover { text-decoration: underline; }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      button, .button { transition: background-color 150ms ease, transform 150ms ease; }
+      button:not(.tile, .viewer-prev, .viewer-next):not(:disabled):active { transform: scale(0.98); }
+      .intro { animation: enter 300ms ease-out; }
+      @keyframes enter { from { opacity: 0; transform: translateY(4px); } }
+    }
+  </style>
 </head>
 <body>
-<header class="mast"><div class="wrap"><span class="brand"><span class="mark" aria-hidden="true"></span>貼文典藏</span><small>Facebook 離線保存工具</small></div></header>
-<main class="wrap">
-<noscript><p class="notice">請下載這個 HTML 檔後，用啟用 JavaScript 的瀏覽器開啟。檔案預覽器可能無法操作。</p></noscript>
-<section id="start">
-  <div class="intro"><h1>Facebook 貼文典藏</h1><p>把貼文、相片和說明存成一份能離線搜尋的收藏。</p></div>
-  <div class="startgrid">
-    <section class="importbox"><h2>開啟你的匯出檔</h2><p class="muted">選同一個個人檔案、同一次匯出的所有 ZIP。也能重開本工具製作的典藏包。</p><div class="actions"><button type="button" id="chooseZip" class="primary">選擇 ZIP 分檔</button><button type="button" id="chooseFolder">選擇已解壓資料夾</button></div><p class="small muted">資料只在這台裝置上讀取。多個已解壓分檔可放進同一個上層資料夾後一起選取。</p></section>
-    <aside class="guide"><h2>在 Facebook 準備資料</h2><ol><li>到設定中的「匯出你的資訊」或「下載你的資訊」，確認選到目標分身。</li><li>選「匯出到裝置」，日期選「所有時間」，格式選 <b>JSON</b>，媒體畫質選「高」。</li><li>建議選全部可用資料；要縮小範圍，請包含貼文、相片影片，以及要保存的社團活動。</li></ol><a href="https://www.facebook.com/help/212802592074644" target="_blank" rel="noopener noreferrer">Facebook 官方匯出說明 ↗</a></aside>
-  </div>
-</section>
-<input id="zipInput" type="file" accept=".zip,application/zip,application/x-zip-compressed" multiple hidden>
-<input id="folderInput" type="file" webkitdirectory multiple hidden>
-<p class="status" id="status" role="status" aria-live="polite"></p>
-<section id="library" hidden>
- <div class="workhead"><div><h1 id="heading">我的貼文典藏</h1><p class="muted" id="totals"></p></div><div class="actions"><button type="button" id="back">另開一份</button><button type="button" id="save" class="primary">儲存離線典藏 ZIP</button></div></div>
- <div class="filters panel">
-   <label class="searchwrap">搜尋全文<input id="search" type="search" placeholder="輸入貼文、相片說明或關鍵字" autocomplete="off"></label>
-   <label class="pick">年份<select id="year"><option value="">所有年份</option></select></label>
-   <label class="pick">顯示<select id="filter"><option value="">所有項目</option><option value="posts">貼文</option><option value="group">社團貼文</option><option value="image">含相片</option><option value="loose">未配對媒體</option><option value="need">附件待核對</option></select></label>
-   <label class="pick">排序<select id="order"><option value="new">由新到舊</option><option value="old">由舊到新</option></select></label>
- </div>
- <details class="report panel" id="report"><summary id="reportSummary">匯入核對報告</summary><div id="reportBody" class="reportbox"></div></details>
- <div class="resultshead"><h2 id="resultCount" aria-live="polite"></h2><button class="link-button" id="clear" type="button" hidden>清除篩選</button></div>
- <div class="items" id="items"></div><button class="more" id="more" hidden>顯示更多</button>
-</section>
-<div class="footer" id="foot">請保留 Facebook 原始 ZIP。典藏包收錄可辨識的貼文資料、附件及核對結果。</div>
-</main>
-<dialog id="lightbox"><div class="dialoghead"><h2 id="viewerTitle">附件</h2><button id="closeViewer" type="button">關閉</button></div><div id="viewMedia" class="viewmedia"></div><div class="dialogfoot"><p id="viewerInfo"></p><a id="downloadMedia" class="button" hidden>下載檔案</a></div></dialog>
-<script type="application/json" id="archive-data">null</script>
-<script>
+  <a class="skip" href="#main" data-i18n>跳至主要內容</a>
+  <header class="mast">
+    <div class="wrap">
+      <span class="brand"><span class="mark" aria-hidden="true"></span><span data-i18n>貼文典藏</span></span>
+      <small id="mastNote" data-i18n>Facebook 離線保存工具</small>
+      <div id="toolbar" class="toolbar" hidden>
+        <button type="button" id="report"><span data-i18n>匯入核對報告</span><span id="reportSummary"></span></button>
+        <button type="button" id="back" data-i18n>另開一份</button>
+        <button type="button" id="save" class="primary" data-i18n>儲存離線典藏 ZIP</button>
+      </div>
+      <label class="langpick"><select id="lang" aria-label="語言" data-i18n-attr="aria-label"><option value="zh" lang="zh-Hant-TW">繁體中文</option><option value="en" lang="en">English</option></select></label>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <noscript>
+      <p class="notice" data-i18n>請下載這個 HTML 檔後，用啟用 JavaScript 的瀏覽器開啟。檔案預覽器可能無法操作。</p>
+    </noscript>
+
+    <section id="start" class="wrap" aria-labelledby="startTitle">
+      <div class="start-layout">
+        <div class="intro">
+          <h1 id="startTitle"><span lang="en">Facebook</span> <span data-i18n>貼文典藏</span></h1>
+          <p data-i18n>開啟 Facebook 匯出檔，把貼文和相片放回同一條動態牆。你可以用關鍵字找貼文，也能按年份回顧。</p>
+          <div class="actions">
+            <button type="button" id="chooseZip" class="primary" data-i18n>選擇 ZIP 分檔</button>
+            <button type="button" id="chooseFolder" data-i18n>選擇已解壓資料夾</button>
+          </div>
+          <p class="small" data-i18n>請一次選齊同次匯出的分檔。檔案只在這台裝置上讀取。</p>
+        </div>
+        <figure class="cover">
+          <img width="640" height="329" data-i18n-attr="alt" alt="冰島西峽灣的山谷和海面" src="data:image/webp;base64,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">
+        </figure>
+      </div>
+
+      <details class="guide">
+        <summary data-i18n>如何從 Facebook 匯出資料？</summary>
+        <ol>
+          <li data-i18n>在 Facebook 設定裡開啟「匯出你的資訊」或「下載你的資訊」，選擇要保存的個人檔案。</li>
+          <li><span data-i18n>選「匯出到裝置」，日期選「所有時間」，格式選</span> <b>JSON</b><span data-i18n>，媒體畫質選「高」。</span></li>
+          <li data-i18n>選取要保存的貼文、相片和影片。想看留言或心情，請一併勾選留言及心情相關類別。個人檔案的簡介和朋友需要個人資料和朋友類別。社團貼文也要包含社團活動。</li>
+          <li data-i18n>解壓過的分檔可以放進同一個上層資料夾，再用「選擇已解壓資料夾」開啟。已儲存的典藏 ZIP 也能用本工具重開。</li>
+        </ol>
+        <a href="https://www.facebook.com/help/212802592074644" target="_blank" rel="noopener noreferrer" data-i18n>Facebook 官方匯出說明 ↗</a>
+      </details>
+    </section>
+
+    <input id="zipInput" type="file" accept=".zip,application/zip,application/x-zip-compressed" multiple hidden>
+    <input id="folderInput" type="file" webkitdirectory multiple hidden>
+    <p id="status" class="status wrap" role="status" aria-live="polite"></p>
+
+    <section id="library" aria-label="個人檔案" hidden data-i18n-attr="aria-label">
+      <div id="profilePage">
+        <div class="profile-head">
+          <div class="page">
+            <div id="coverPhoto" class="profile-cover"></div>
+            <div class="identity">
+              <span id="bigAvatar" class="avatar me big" aria-hidden="true"></span>
+              <div class="who">
+                <h1 id="profileName"></h1>
+                <p id="friendCount" class="muted"></p>
+              </div>
+              <div class="identity-actions">
+                <button type="button" id="openActivity" data-i18n>活動紀錄</button>
+              </div>
+            </div>
+            <div id="profileTabs" class="tabs" role="tablist" aria-label="個人檔案分頁" data-i18n-attr="aria-label">
+              <button type="button" role="tab" id="tab-posts" data-tab="posts" aria-controls="panel-posts" aria-selected="true" data-i18n>貼文</button>
+              <button type="button" role="tab" id="tab-photos" data-tab="photos" aria-controls="panel-photos" aria-selected="false" tabindex="-1" data-i18n>相片</button>
+              <button type="button" role="tab" id="tab-friends" data-tab="friends" aria-controls="panel-friends" aria-selected="false" tabindex="-1" data-i18n>朋友</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="page">
+          <div id="panel-posts" class="columns" role="tabpanel" aria-labelledby="tab-posts">
+            <aside class="side">
+              <section class="card" aria-labelledby="introTitle">
+                <h2 id="introTitle" data-i18n>簡介</h2>
+                <div id="introBody"></div>
+              </section>
+              <section class="card" aria-labelledby="photoPreviewTitle">
+                <div class="cardhead">
+                  <h2 id="photoPreviewTitle" data-i18n>相片</h2>
+                  <button type="button" class="link-button" data-goto="photos" data-i18n>查看所有相片</button>
+                </div>
+                <div id="photoPreview" class="grid9"></div>
+              </section>
+              <section class="card" aria-labelledby="friendPreviewTitle">
+                <div class="cardhead">
+                  <h2 id="friendPreviewTitle" data-i18n>朋友</h2>
+                  <button type="button" class="link-button" data-goto="friends" data-i18n>查看所有朋友</button>
+                </div>
+                <p id="friendPreviewCount" class="muted"></p>
+                <div id="friendPreview" class="friends9"></div>
+              </section>
+            </aside>
+            <div class="feed">
+              <div class="card feedhead">
+                <h2 data-i18n>貼文</h2>
+                <button type="button" id="openFilter" data-i18n>篩選</button>
+              </div>
+              <p id="filterSummary" class="filter-summary" aria-live="polite" hidden>
+                <span id="resultCount"></span>
+                <button type="button" id="clear" class="link-button" data-i18n>清除篩選</button>
+              </p>
+              <div id="items" class="items"></div>
+              <button type="button" id="more" class="more" hidden>顯示更多</button>
+            </div>
+          </div>
+
+          <section id="panel-photos" class="card panel-wide" role="tabpanel" aria-labelledby="tab-photos" hidden>
+            <h2 data-i18n>相片</h2>
+            <div id="photoTabs" class="subtabs" role="tablist" aria-label="相片分類" data-i18n-attr="aria-label">
+              <button type="button" role="tab" data-sub="photos" aria-selected="true" data-i18n>相片</button>
+              <button type="button" role="tab" data-sub="albums" aria-selected="false" tabindex="-1" data-i18n>相簿</button>
+              <button type="button" role="tab" data-sub="videos" aria-selected="false" tabindex="-1" data-i18n>影片</button>
+            </div>
+            <div id="albumBar" class="albumbar" hidden>
+              <button type="button" id="albumBack" class="link-button" data-i18n>← 所有相簿</button>
+              <h3 id="albumTitle"></h3>
+            </div>
+            <div id="photoGrid" class="photogrid"></div>
+            <button type="button" id="photoMore" class="more" hidden>顯示更多</button>
+          </section>
+
+          <section id="panel-friends" class="card panel-wide" role="tabpanel" aria-labelledby="tab-friends" hidden>
+            <div class="cardhead">
+              <h2 data-i18n>朋友</h2>
+              <label class="searchbox"><span class="sr-only" data-i18n>搜尋朋友</span><input id="friendSearch" type="search" placeholder="搜尋" autocomplete="off" data-i18n-attr="placeholder"></label>
+            </div>
+            <div id="friendGrid" class="friendgrid"></div>
+            <button type="button" id="friendMore" class="more" hidden>顯示更多</button>
+          </section>
+        </div>
+      </div>
+
+      <div id="activityPage" class="page activity" hidden>
+        <aside class="card activity-nav">
+          <button type="button" id="closeActivity" class="link-button" data-i18n>← 返回個人檔案</button>
+          <h1 id="activityHeading" tabindex="-1" data-i18n>活動紀錄</h1>
+          <p class="small muted" data-i18n>你寫的留言和你按的心情。</p>
+          <div id="activityKinds" class="kinds" role="group" aria-label="活動類別" data-i18n-attr="aria-label"></div>
+        </aside>
+        <div class="activity-main">
+          <label class="searchbox"><span class="sr-only" data-i18n>搜尋活動紀錄</span><input id="activitySearch" type="search" placeholder="搜尋活動紀錄" autocomplete="off" data-i18n-attr="placeholder"></label>
+          <div id="activityList" class="activity-list"></div>
+          <button type="button" id="activityMore" class="more" hidden>顯示更多</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    <div class="footer-line">
+      <p id="foot" data-i18n>請保留 Facebook 原始 ZIP。典藏包收錄可辨識的貼文資料、附件及核對結果。</p>
+      <p class="cover-credit"><span data-i18n>封面攝影</span> · <a href="https://commons.wikimedia.org/wiki/File:Stunning_Westfjords,_Iceland_(48816583203).jpg" target="_blank" rel="noopener noreferrer">Barry Marsh ↗</a></p>
+    </div>
+  </footer>
+
+  <dialog id="filterDialog" aria-labelledby="filterTitle">
+    <div class="dialoghead">
+      <h2 id="filterTitle" data-i18n>貼文篩選條件</h2>
+      <button type="button" id="closeFilter" class="round" aria-label="關閉" data-i18n-attr="aria-label">✕</button>
+    </div>
+    <div class="dialogbody filter-fields" role="search">
+      <label><span data-i18n>搜尋貼文</span><input id="search" type="search" placeholder="輸入貼文、相片說明或關鍵字" autocomplete="off" data-i18n-attr="placeholder"></label>
+      <label><span data-i18n>年份</span><select id="year"><option value="" data-i18n>所有年份</option></select></label>
+      <label><span data-i18n>排序</span><select id="order"><option value="new" data-i18n>由新到舊</option><option value="old" data-i18n>由舊到新</option></select></label>
+    </div>
+    <div class="dialogfoot">
+      <button type="button" id="clearFilter" data-i18n>清除</button>
+      <button type="button" id="doneFilter" class="primary" data-i18n>完成</button>
+    </div>
+  </dialog>
+
+  <dialog id="reportDialog" aria-labelledby="reportTitle">
+    <div class="dialoghead">
+      <h2 id="reportTitle" data-i18n>匯入核對報告</h2>
+      <button type="button" id="closeReport" class="round" aria-label="關閉" data-i18n-attr="aria-label">✕</button>
+    </div>
+    <div id="reportBody" class="dialogbody reportbox"></div>
+  </dialog>
+
+  <dialog id="rawDialog" aria-labelledby="rawTitle">
+    <div class="dialoghead">
+      <h2 id="rawTitle" data-i18n>原始資料</h2>
+      <button type="button" id="closeRaw" class="round" aria-label="關閉" data-i18n-attr="aria-label">✕</button>
+    </div>
+    <div class="dialogbody">
+      <p id="rawPath" class="small muted"></p>
+      <pre id="rawBody"></pre>
+      <button type="button" id="rawDownload" data-i18n>下載原始 JSON 檔</button>
+    </div>
+  </dialog>
+
+  <dialog id="lightbox" aria-label="相片檢視器" data-i18n-attr="aria-label">
+    <div class="stage">
+      <button type="button" id="closeViewer" class="round viewer-close" aria-label="關閉" data-i18n-attr="aria-label">✕</button>
+      <button type="button" id="prevMedia" class="round viewer-prev" aria-label="上一張" data-i18n-attr="aria-label">‹</button>
+      <div id="viewMedia" class="viewmedia"></div>
+      <button type="button" id="nextMedia" class="round viewer-next" aria-label="下一張" data-i18n-attr="aria-label">›</button>
+    </div>
+    <aside class="viewer-side">
+      <div id="viewerHead"></div>
+      <p id="viewerText" class="posttext"></p>
+      <p id="viewerCaption" class="posttext"></p>
+      <p id="viewerInfo" class="small muted"></p>
+      <a id="downloadMedia" class="button" hidden data-i18n>下載檔案</a>
+    </aside>
+  </dialog>
+
+  <script type="application/json" id="archive-data">null</script>
+  <script>
 'use strict';
 // ZIP inputs are indexed from their central directory. Media is read one entry at a time.
 const utf8 = new TextEncoder();
@@ -263,6 +893,10 @@ function postFile(path) {
   const parts=partsOf(path), name=parts.pop(), base=name.replace(/\.json$/,'');
   if (!name.endsWith('.json') || parts.some(inMessaging) || parts.some(p=>/^(ads_information|ads_and_businesses|friends_and_followers)$/.test(p))) return '';
   const categories=parts.map(p=>p.split(/[（(]/)[0].replace(/[_\s]+$/,''));
+  if (/^(?:your_)?(?:likes_and_reactions|reactions|按讚和心情|心情)(?:_v?\d+)*$/.test(base) ||
+      (categories.includes('likes_and_reactions') && /^(?:posts_and_comments|posts|comments)(?:_\d+)?$/.test(base))) return 'reaction';
+  if (/^(?:your_)?(?:comments?|留言)(?:$|_)/.test(base) && !/comments?_and_reactions/.test(base)) return 'comment';
+  if (/^comments_and_reactions(?:_\d+)?$/.test(base)) return 'candidate';
   if (/(?:^|_)group.*post|post.*(?:in_|to_)groups?|your_(?:group_)?posts_and_comments_in_groups/.test(base)) return 'group';
   if (categories.some(p=>['album','albums','photo_albums','相簿'].includes(p)) || /^(?:your_)?albums?(?:_|$)/.test(base) || /相簿/.test(base)) return 'album';
   if (/(?:uncategori[sz]ed_(?:photos|videos)|(?:your_|uploaded_|profile_|cover_|mobile_|timeline_)(?:photos|videos|pictures)|photo_albums)/.test(base) && !/posts/.test(base)) return 'photo';
@@ -323,11 +957,201 @@ function *stringsIn(value) {
   if (typeof value==='string') { yield fixedText(value); return; }
   if (value && typeof value==='object') for (const v of Object.values(value)) yield* stringsIn(v);
 }
+
+function emptyExportField(value) {
+  return value == null || (typeof value === 'string' && !value.trim()) ||
+    (typeof value === 'object' && Object.keys(value).length === 0);
+}
+
+function isNoValue(value) {
+  return value === false || /^(?:否|no|false)$/i.test(fixedText(value).trim());
+}
+
+function isEmptyUnsharedRecord(raw) {
+  if (!Array.isArray(raw?.label_values)) return false;
+  for (const [key, value] of Object.entries(raw)) {
+    if (!['label_values', 'timestamp', 'fbid'].includes(key) && !emptyExportField(value)) return false;
+  }
+
+  let unshared = false;
+  for (const field of raw.label_values) {
+    if (!field || typeof field !== 'object' || Array.isArray(field)) return false;
+    const label = fixedText(field.label).trim();
+    for (const [key, value] of Object.entries(field)) {
+      if (key === 'label' || key === 'timestamp_value' || emptyExportField(value)) continue;
+      if (key !== 'value' || !/^(?:已分享|是否已分享|shared|is shared)$/i.test(label) || !isNoValue(value)) return false;
+      unshared = true;
+    }
+  }
+  return unshared;
+}
+
+function shareMetric(label) {
+  // A pasted Latin-1 export can lose the final byte of 你. The field's distinctive suffix survives.
+  return /分享的(?:群組)?連結是否仍在等待第一位瀏覽者$/.test(label) ||
+    /資訊用於個人化\s*Facebook\s*(?:註冊畫面|登入橫幅)的次數$/i.test(label);
+}
+const urlLabel = /^(?:網址|連結網址|URL|permalink)$/i;
+const reactionLabel = /^(?:心情|心情類型|表情符號|reaction|reaction type)$/i;
+const actorLabel = /^(?:作者|姓名|actor|author|name)$/i;
+function isShareStatistics(raw) {
+  if (!Array.isArray(raw?.label_values) || Object.entries(raw).some(([key, value]) =>
+    !['timestamp', 'fbid', 'label_values'].includes(key) && !emptyExportField(value))) return false;
+  let hasMetric = false;
+  for (const field of raw.label_values) {
+    if (!field || typeof field !== 'object' || Array.isArray(field)) return false;
+    const label = fixedText(field.label).trim();
+    const metric = shareMetric(label);
+    for (const [key, value] of Object.entries(field)) {
+      if (key === 'label' || key === 'timestamp_value' || emptyExportField(value)) continue;
+      if (metric && key === 'value' && looseMetricValue(value)) { hasMetric = true; continue; }
+      if (urlLabel.test(label) && ['value','href','url'].includes(key) && postIdFromURL(value)) continue;
+      return false;
+    }
+  }
+  return hasMetric;
+}
+function looseMetricValue(value) {
+  return typeof value === 'boolean' || /^\d+$/.test(String(value)) ||
+    /^(?:正確|錯誤|是|否|true|false|yes|no)$/i.test(fixedText(value).trim());
+}
+
+const unknownRecordNote = '{n} 筆欄位格式待核對，可搜尋、展開原始資料';
+const duplicateNote = '與其他分檔的同一份資料相同，貼文已計入';
+const onlyUnsharedNote = '只有未分享的空白紀錄，已略過';
+const onlyStatsNote = '只有分享狀態或統計資料，已略過';
+function sourceIndexNote(count, unknown, skipped) {
+  if (unknown) return {t:unknownRecordNote,v:{n:unknown}};
+  if (count) return '';
+  return skipped || '沒有可建立索引的紀錄，請核對原始檔';
+}
+
+const reactionNames = new Map([
+  ['LIKE','👍 讚'], ['LOVE','❤️ 大心'], ['CARE','🥰 加油'], ['HAHA','😆 哈哈'],
+  ['WOW','😮 哇'], ['SAD','😢 嗚'], ['ANGRY','😡 怒'],
+]);
+// Older exports and the Chinese UI use these names for the same reactions.
+const reactionAliases = {SORRY:'SAD', ANGER:'ANGRY', '哈':'HAHA', '按讚':'LIKE', '喜歡':'LIKE'};
+function reactionName(value) {
+  const name = fixedText(value).trim();
+  const code = reactionAliases[name.toUpperCase()] || name.toUpperCase();
+  if (reactionNames.has(code)) return reactionNames.get(code);
+  for (const display of reactionNames.values()) {
+    if (display.split(' ').includes(name) || display === name) return display;
+  }
+  return name;
+}
+function objectId(value) {
+  if (typeof value === 'number' && !Number.isSafeInteger(value)) return '';
+  return /^(?:\d+|pfbid[A-Za-z0-9]+)$/.test(String(value)) ? String(value) : '';
+}
+function postIdFromURL(value, allowComment=false) {
+  if (typeof value !== 'string' || !webLink(value)) return '';
+  try {
+    const url = new URL(absoluteWeb(value));
+    if (!/(^|\.)facebook\.com$/i.test(url.hostname)) return '';
+    if (!allowComment && (url.searchParams.has('comment_id') || url.searchParams.has('reply_comment_id'))) return '';
+    const pathId = url.pathname.match(/\/(?:posts|permalink)\/([^/]+)\/?$/i)?.[1];
+    const storyId = /\/(?:story|permalink)\.php$/i.test(url.pathname) ? url.searchParams.get('story_fbid') : '';
+    return objectId(pathId || storyId);
+  } catch { return ''; }
+}
+function labelField(raw, pattern) {
+  return Array.isArray(raw?.label_values) && raw.label_values.find(f=>pattern.test(fixedText(f?.label).trim()));
+}
+function ownPostIds(raw) {
+  if (!raw) return [];
+  return [objectId(raw.post_id),objectId(raw.fbid),objectId(raw.id),
+    postIdFromURL(raw.permalink_url),postIdFromURL(raw.url)].filter(Boolean);
+}
+function activityPart(raw, key) {
+  return raw?.[key] ?? (Array.isArray(raw?.data) ? raw.data.find(v=>v?.[key] != null)?.[key] : undefined);
+}
+function activityKind(raw, fallback) {
+  if (raw && typeof raw === 'object') {
+    if (activityPart(raw,'comment') != null || labelField(raw,/^(?:留言|留言內容|comment|comment text)$/i)) return 'comment';
+    if (activityPart(raw,'reaction') != null || raw.reaction_type || labelField(raw,reactionLabel)) return 'reaction';
+  }
+  return fallback;
+}
+function readActivity(raw, kind) {
+  const detail = activityPart(raw, kind);
+  const payload = detail && typeof detail === 'object' ? detail : raw;
+  const field = labelField(raw,reactionLabel);
+  const who = payload.actor ?? payload.author ?? payload.from ?? raw.actor ?? raw.author ?? raw.from ??
+    (kind === 'reaction' ? payload.name : null) ?? labelField(raw,actorLabel)?.value;
+  const link = labelField(raw,urlLabel);
+  const targets = new Set();
+  let onComment = false;
+  for (const part of new Set([raw,payload])) {
+    const target = part.target ?? {};
+    if (part.comment_id || part.reply_comment_id || /^comment$/i.test(target.type || part.target_type)) onComment = true;
+    for (const id of [part.post_id,part.target_post_id,part.target_id,target.id,target.post_id]) {
+      const key = objectId(id);
+      if (key) targets.add(key);
+    }
+    for (const url of [part.target_url,part.post_url,part.permalink_url,part.url,part.href,target.url,link?.href || link?.value]) {
+      if (typeof url==='string' && /[?&](?:comment_id|reply_comment_id)=/i.test(url)) onComment = true;
+      const id = postIdFromURL(url,kind==='comment');
+      if (id) targets.add(id);
+    }
+  }
+  const type = kind === 'reaction' ? reactionName(typeof detail === 'string' ? detail :
+    payload.reaction ?? payload.reaction_type ?? payload.type ?? field?.value) : '';
+  return {actor:fixedText(typeof who === 'string' ? who : who?.name),type,
+    targets:kind==='reaction' && onComment ? [] : [...targets]};
+}
+
+function isPost(r) {return r.kind==='post'||r.kind==='group';}
+function isActivity(kind) {return kind === 'comment' || kind === 'reaction';}
+function buildThreads(data) {
+  const ids = new Map(), locations = new Map(), parents = new Map(), threadFor = new Map();
+  function thread(post) {
+    if (!threadFor.has(post)) threadFor.set(post,{comments:[],reactions:[],total:0,counts:new Map()});
+    return threadFor.get(post);
+  }
+  for (const post of data.items.filter(isPost)) {
+    for (const id of new Set(ownPostIds(post.raw))) ids.set(id, ids.has(id) ? null : post);
+    locations.set(post.src + ':' + post.locator, post);
+    const reactions = post.raw?.reactions;
+    const total = reactions?.summary?.total_count ?? reactions?.total_count;
+    if (Number.isSafeInteger(total) && total > 0) thread(post).total = total;
+    for (const [key, n] of Object.entries(post.raw?.reaction_counts ?? reactions?.counts ?? {})) {
+      if (Number.isSafeInteger(n) && n > 0) thread(post).counts.set(reactionName(key), n);
+    }
+  }
+  for (const row of data.items) {
+    if (!isActivity(row.kind)) continue;
+    const activity = row.activity ?? readActivity(row.raw || {},row.kind);
+    const targets = activity.targets || [];
+    const hits = new Set(targets.filter(id=>ids.has(id)).map(id=>ids.get(id)));
+    const owner = activity.parent != null ? locations.get(row.src + ':' + activity.parent) :
+      hits.size === 1 ? [...hits][0] : null;
+    if (!owner) continue;
+    parents.set(row,owner);
+    thread(owner)[row.kind === 'comment' ? 'comments' : 'reactions'].push(row);
+  }
+  // Meta writes each of your reactions twice, in two files: one copy has the link, the other names the target.
+  // Show one card per reaction. Only exact pairs are merged; anything ambiguous stays visible.
+  const sameReaction = new Map(), merged = new Map();
+  for (const row of data.items) {
+    if (row.kind !== 'reaction' || row.ts == null) continue;
+    const key = row.ts + '|' + row.activity?.type;
+    sameReaction.set(key, [...(sameReaction.get(key) || []), row]);
+  }
+  for (const rows of sameReaction.values()) {
+    if (rows.length !== 2 || rows[0].src === rows[1].src) continue;
+    const [keep, drop] = rows[1].title && !rows[0].title ? [rows[1], rows[0]] : rows;
+    merged.set(keep, drop);
+  }
+  return {threadFor,parents,merged,hidden:new Set(merged.values())};
+}
+
 function collectRows(obj, kind, emit, where='$') {
   if (Array.isArray(obj)) {
     obj.forEach((row,i)=> {
       if (row && typeof row==='object') collectRows(row,kind,emit,where+'['+i+']');
-      else if (row!=null) emit(row,'other',where+'['+i+']');
+      else if (row!=null) emit(row,isActivity(kind)?kind:'other',where+'['+i+']');
     });
     return;
   }
@@ -336,21 +1160,22 @@ function collectRows(obj, kind, emit, where='$') {
   if (kind==='album' && (obj.name||obj.title||obj.cover_photo) && (obj.photos||obj.videos||obj.media||obj.photos_v2)) {
     emit(obj,'album',where); return;
   }
-  if (['timestamp','creation_timestamp','creation_time','created_time','attachments','label_values','post','media','uri','src','message','text','comment','life_event'].some(k=>k in obj)
-      || (Array.isArray(obj.data) && obj.data.some(v=>v&&typeof v==='object'&&('post' in v||'comment' in v||'external_context' in v||'media' in v)))) {
+  if (['timestamp','creation_timestamp','creation_time','created_time','attachments','label_values','post','media','uri','src','message','text','comment','reaction','reaction_type','life_event'].some(k=>k in obj)
+      || (Array.isArray(obj.data) && obj.data.some(v=>v&&typeof v==='object'&&('post' in v||'comment' in v||'reaction' in v||'external_context' in v||'media' in v)))) {
     let actual=kind;
     if (kind==='candidate') {
       const containsPost='post' in obj || (Array.isArray(obj.data)&&obj.data.some(v=>v&&typeof v==='object'&&'post' in v));
       actual=containsPost?'post':'other';
     }
-    emit(obj,actual,where); return;
+    emit(obj,activityKind(obj,actual),where); return;
   }
   const branches=keys.filter(k=>(Array.isArray(obj[k]) || (obj[k]&&typeof obj[k]==='object')) &&
-    /(?:post|group|photo|video|album|timeline|check_?in|comment|media|^data$|^items$|^entries$|^records$)/i.test(k));
+    /(?:post|group|photo|video|album|timeline|check_?in|comment|reaction|media|^data$|^items$|^entries$|^records$)/i.test(k));
   if (branches.length) {
     for (const k of branches) {
       let sub=kind;
-      if (/comment/i.test(k)&&!/post/i.test(k)) sub='comment';
+      if (/reaction/i.test(k) && !/comment/i.test(k)) sub='reaction';
+      else if (/comment/i.test(k)&&!/post|reaction/i.test(k)) sub='comment';
       else if (/group/i.test(k)&&/post/i.test(k)) sub='group';
       else if (/album/i.test(k)) sub='album';
       else if (kind==='candidate'&&/post/i.test(k)) sub='post';
@@ -359,11 +1184,21 @@ function collectRows(obj, kind, emit, where='$') {
     }
     return;
   }
-  if (keys.length) emit(obj,kind==='candidate'||(!obj.title&&!obj.description&&!obj.name)?'other':kind,where);
+  if (keys.length) emit(obj,isActivity(kind)?kind:kind==='candidate'||(!obj.title&&!obj.description&&!obj.name)?'other':kind,where);
+}
+
+function embeddedActivity(post, where, emit) {
+  for (const [key, kind] of [['comments','comment'], ['reactions','reaction']]) {
+    const value = post?.[key];
+    const rows = Array.isArray(value) ? value : value?.data;
+    if (!Array.isArray(rows)) continue;
+    const path = where + '.' + key + (Array.isArray(value) ? '' : '.data');
+    rows.forEach((raw,i)=>{if (raw != null) emit(raw,kind,path+'['+i+']',where);});
+  }
 }
 function normalRecord(raw,kind,srcId,locator,resolve,addAsset,entry) {
-  const obj=raw&&typeof raw==='object'?raw:{text:String(raw)}, body=new Set(), links=new Map(), attachments=new Map();
-  const title=fixedText(obj.title||obj.name||obj.album_name);
+  const obj=raw&&typeof raw==='object'?raw:{[kind==='reaction'?'reaction':'text']:String(raw)}, body=new Set(), links=new Map(), attachments=new Map();
+  const title=fixedText(obj.title||(!isActivity(kind) && obj.name)||obj.album_name);
   let ts=toEpoch(obj.timestamp??obj.creation_timestamp??obj.creation_time??obj.created_time??obj.taken_at);
   const addText=value=>{if (value && value!==title) body.add(value);};
   function attach(ref,label,hint) {
@@ -376,12 +1211,18 @@ function normalRecord(raw,kind,srcId,locator,resolve,addAsset,entry) {
   function visit(node, context='') {
     if (Array.isArray(node)) { for (const v of node) visit(v,context); return; }
     if (!node || typeof node!=='object') return;
+    const statField = context==='label_values' && shareMetric(fixedText(node.label));
     const label=fixedText(node.description||node.caption||node.title||node.name||'');
     let sawRef=false;
     for (const [k,value] of Object.entries(node)) {
+      if (statField && k==='value' && looseMetricValue(value)) continue;
+      if ((kind==='post' || kind==='group') && ['comments','reactions','reaction_counts'].includes(k)) continue;
+      if (isActivity(kind) && ['author','actor','from','target','name'].includes(k)) continue;
       if (typeof value==='string') {
         const t=fixedText(value);
-        if (['post','text','message','comment','description','caption','body','name','title','value','address','place_name'].includes(k)) addText(t);
+        const fieldLabel=k==='value'?fixedText(node.label).trim():'';
+        if (['post','text','message','comment','description','caption','body','name','title','value','address','place_name'].includes(k) &&
+            !(k==='value' && (webLink(t) || (kind==='reaction' && reactionLabel.test(fieldLabel)) || (isActivity(kind) && actorLabel.test(fieldLabel))))) addText(t);
         if (['uri','src','file_path','media_uri','image_uri','image_url','photo_uri','thumbnail','thumbnail_url','video_uri'].includes(k)
           || (['url','href','attachment'].includes(k)&&(/^(media|photo|image|video|audio|thumbnail)$/.test(context)||(!webLink(t)&&mediaType(t).kind!=='file')))
           || (['media','image','photo','video','audio','file'].includes(k)&&(/[/\\.]/.test(t)))) {
@@ -401,9 +1242,38 @@ function normalRecord(raw,kind,srcId,locator,resolve,addAsset,entry) {
     const media=obj.attachments?.[0]?.data?.[0]?.media;
     ts=toEpoch(media?.creation_timestamp);
   }
-  return {kind,title,body:[...body],ts,links:[...links.values()],attachments:[...attachments.values()],src:srcId,locator,raw};
+  const record = {kind,title,body:[...body],ts,links:[...links.values()],attachments:[...attachments.values()],src:srcId,locator,raw};
+  if (isActivity(kind)) {
+    record.activity = readActivity(obj,kind);
+    const detail = activityPart(obj,kind);
+    record.ts ??= toEpoch(detail?.timestamp ?? detail?.created_time);
+  }
+  return record;
 }
 const nextFrame=()=>new Promise(ok=>setTimeout(ok,0));
+// Name, intro and friends for the profile header. Missing or unreadable files only leave those parts blank.
+async function readProfile(entries) {
+  const find=re=>entries.find(e=>re.test(canonicalPath(e.path)));
+  const readJSON=async e=>JSON.parse(strictUTF8.decode(await (await inspectEntry(e,true)).arrayBuffer()));
+  const info=find(/(?:^|\/)profile_information\.json$/i), friends=find(/(?:^|\/)(?:your_)?friends(?:_\d+)?\.json$/i);
+  const profile={};
+  try {
+    if (info) {
+      const raw=await readJSON(info), p=raw.profile_v2||raw.profile||{}, work=p.work_experiences?.[0];
+      profile.name=fixedText(p.name?.full_name);
+      profile.bio=fixedText(p.intro_bio?.name);
+      profile.city=fixedText(p.current_city?.name);
+      if (work) profile.work={employer:fixedText(work.employer),title:fixedText(work.title)};
+    }
+  } catch {}
+  try {
+    if (friends) {
+      const raw=await readJSON(friends), rows=raw.friends_v2||raw.friends||(Array.isArray(raw)?raw:[]);
+      profile.friends=rows.filter(f=>typeof f?.name==='string').map(f=>({name:fixedText(f.name),ts:toEpoch(f.timestamp)}));
+    }
+  } catch {}
+  return profile;
+}
 async function loadFacebook(entries,inputs,issues,onProgress) {
   const data={format:archiveFormat,created:new Date().toISOString(),inputs,items:[],assets:[],sources:[],issues,otherJSON:[]};
   const assets=[], sources=[], byEntry=new Map(), seenSource=new Map();
@@ -431,11 +1301,11 @@ async function loadFacebook(entries,inputs,issues,onProgress) {
       if(n>expected)gaps.push(n===expected+1?String(expected):expected+'–'+(n-1));
       expected=n+1;
     }
-    if(gaps.length)data.issues.push(series+' 的 JSON 編號未連續，缺少 '+gaps.join('、')+'。請核對是否漏選匯出分檔。');
+    if(gaps.length)data.issues.push({t:'{series} 的 JSON 編號未連續，缺少 {gaps}。請核對是否漏選匯出分檔。',v:{series,gaps:gaps.join(', ')}});
   }
   for (const e of entries) if (/\.json$/i.test(e.path) && !postFile(e.path)) data.otherJSON.push(inputs[e.source]+' ／ '+e.path);
   for (const [i,entry] of candidates.entries()) {
-    onProgress('正在讀取貼文資料 '+(i+1)+' / '+candidates.length);
+    onProgress({t:'正在讀取貼文資料 {i} / {n}',v:{i:i+1,n:candidates.length}});
     const s={path:entry.path,bundle:inputs[entry.source],file:'source/'+String(i+1).padStart(5,'0')+'.json',count:0,note:''};
     data.sources.push(s); sources.push(entry);
     try {
@@ -445,18 +1315,22 @@ async function loadFacebook(entries,inputs,issues,onProgress) {
       const key=JSON.stringify([tail,entry.crc,entry.size]);
       const previous=seenSource.get(key);
       if (previous!==undefined && text===strictUTF8.decode(await (await inspectEntry(sources[previous],true)).arrayBuffer())) {
-        s.note='與其他分檔的同一份資料相同，貼文已計入'; continue;
+        s.note=duplicateNote; continue;
       }
       seenSource.set(key,i);
-      let unknown=0;
-      collectRows(raw,postFile(entry.path),(obj,kind,loc)=>{
+      let unknown=0, skipped='';
+      function addRecord(obj,kind,loc,parent) {
+        if (isShareStatistics(obj)) { skipped=onlyStatsNote; return; }
+        if (isEmptyUnsharedRecord(obj)) { skipped ||= onlyUnsharedNote; return; }
         const r=normalRecord(obj,kind,i,loc,resolve,addAsset,entry);
+        if (parent != null) r.activity.parent=parent;
         data.items.push(r); s.count++;
         if (kind==='other') unknown++;
-      });
-      if (unknown) s.note=unknown+' 筆欄位格式待核對，可搜尋、展開原始資料';
-      if (!s.count) s.note='沒有可建立索引的紀錄，請核對原始檔';
-    } catch (err) { s.note='讀取失敗：'+err.message; data.issues.push(s.path+' — '+s.note); }
+        if (isPost(r)) embeddedActivity(obj,loc,addRecord);
+      }
+      collectRows(raw,postFile(entry.path),addRecord);
+      s.note=sourceIndexNote(s.count,unknown,skipped);
+    } catch (err) { s.note={t:'讀取失敗：{msg}',v:{msg:{t:err.message}}}; data.issues.push({t:'{path} — {msg}',v:{path:s.path,msg:s.note}}); }
     if (i%8===0) await nextFrame();
   }
   const linked=new Set(assets.map((_,i)=>i));
@@ -470,21 +1344,288 @@ async function loadFacebook(entries,inputs,issues,onProgress) {
     const html=entries.some(e=>/\.html?$/i.test(e.path));
     data.issues.push(html?'找到 HTML 或網頁檔，但沒有辨識到貼文 JSON。請回 Facebook 選 JSON 重新匯出所有時間，或補齊含貼文的 ZIP 分檔。':'沒有辨識到貼文 JSON。請確認個人檔案、資料類別、JSON 格式及 ZIP 分檔是否齊全。');
   }
+  data.profile=await readProfile(entries);
   return {data,assets,sources,mode:'input'};
 }
 
 
 const $=id=>document.getElementById(id);
+// Translation: the Traditional Chinese text is the key and English comes from this table; a missing key shows the Chinese.
+// Facebook's own words (post text, titles, album names) are data and are never looked up here.
+const en={
+  // Page and start screen
+  '貼文典藏｜Facebook 離線保存工具':'Facebook Post Archive | Keep your posts offline',
+  '在自己的裝置上依年份或關鍵字查閱 Facebook 貼文、相片與附件。':'Browse your Facebook posts, photos and attachments by year or keyword, on your own device.',
+  '跳至主要內容':'Skip to main content',
+  '貼文典藏':'Post Archive',
+  'Facebook 離線保存工具':'Keep your Facebook posts offline',
+  '語言':'Language',
+  '請下載這個 HTML 檔後，用啟用 JavaScript 的瀏覽器開啟。檔案預覽器可能無法操作。':'Download this HTML file and open it in a browser with JavaScript turned on. File previewers may not work.',
+  '開啟 Facebook 匯出檔，把貼文和相片放回同一條動態牆。你可以用關鍵字找貼文，也能按年份回顧。':'Open your Facebook export to see your posts and photos together on one timeline again. Search by keyword or look back by year.',
+  '選擇 ZIP 分檔':'Choose ZIP files',
+  '選擇已解壓資料夾':'Choose extracted folder',
+  '請一次選齊同次匯出的分檔。檔案只在這台裝置上讀取。':'Select every part of one export at once. Files are read only on this device.',
+  '如何從 Facebook 匯出資料？':'How do I export my data from Facebook?',
+  '在 Facebook 設定裡開啟「匯出你的資訊」或「下載你的資訊」，選擇要保存的個人檔案。':'In Facebook, go to Settings & privacy › Settings › Accounts Center › Your information and permissions, open “Export your information” (or “Download your information”), and choose the profile to save.',
+  '選「匯出到裝置」，日期選「所有時間」，格式選':'Choose “Export to device”, set Date range to “All time”, Format to',
+  '，媒體畫質選「高」。':', and Media quality to “High”.',
+  '選取要保存的貼文、相片和影片。想看留言或心情，請一併勾選留言及心情相關類別。個人檔案的簡介和朋友需要個人資料和朋友類別。社團貼文也要包含社團活動。':'Select the posts, photos and videos to save. To see comments and reactions, also select “Comments and reactions”. The profile intro and friends need “Personal information” and “Connections”. Group posts also need “Groups”.',
+  '解壓過的分檔可以放進同一個上層資料夾，再用「選擇已解壓資料夾」開啟。已儲存的典藏 ZIP 也能用本工具重開。':'Put extracted parts in one parent folder and open it with “Choose extracted folder”. A saved archive ZIP can also be reopened here.',
+  'Facebook 官方匯出說明 ↗':'Facebook Help: export your information ↗',
+  '冰島西峽灣的山谷和海面':'A valley and the sea in the Westfjords, Iceland',
+  '請保留 Facebook 原始 ZIP。典藏包收錄可辨識的貼文資料、附件及核對結果。':'Keep your original Facebook ZIP. The archive holds the post data and attachments it could recognize, plus the import report.',
+  '封面攝影':'Cover photo',
+
+  // Toolbar and dialogs
+  '匯入核對報告':'Import report',
+  '另開一份':'Open another',
+  '儲存離線典藏 ZIP':'Save offline archive ZIP',
+  '關閉':'Close',
+  '貼文篩選條件':'Post filters',
+  '搜尋貼文':'Search posts',
+  '輸入貼文、相片說明或關鍵字':'Post text, photo caption or keyword',
+  '年份':'Year',
+  '所有年份':'All years',
+  '排序':'Sort',
+  '由新到舊':'Newest first',
+  '由舊到新':'Oldest first',
+  '清除':'Clear',
+  '完成':'Done',
+  '原始資料':'Raw data',
+  '下載原始 JSON 檔':'Download original JSON',
+  '下載檔案':'Download file',
+  '相片檢視器':'Photo viewer',
+  '上一張':'Previous',
+  '下一張':'Next',
+
+  // Profile
+  '個人檔案':'Profile',
+  '個人檔案分頁':'Profile tabs',
+  '活動紀錄':'Activity log',
+  '貼文':'Posts',
+  '相片':'Photos',
+  '朋友':'Friends',
+  '簡介':'Intro',
+  '查看所有相片':'See all photos',
+  '查看所有朋友':'See all friends',
+  '篩選':'Filters',
+  '清除篩選':'Clear filters',
+  '相簿':'Albums',
+  '影片':'Videos',
+  '相片分類':'Photo categories',
+  '← 所有相簿':'← All albums',
+  '搜尋':'Search',
+  '搜尋朋友':'Search friends',
+  '我':'Me',
+  '｜貼文典藏':' | Post Archive',
+  '{n} 位朋友':['{n} friend','{n} friends'],
+  '{n} 篇貼文':['{n} post','{n} posts'],
+  ' · {n} 處待核對':' · {n} to check',
+  ' · 有提示':' · notes',
+  '在 {org} 擔任 {title}':'{title} at {org}',
+  '在 {org} 工作':'Works at {org}',
+  '住在 {city}':'Lives in {city}',
+  '匯出檔沒有提供簡介資料。':'The export has no intro details.',
+  '還沒有相片。':'No photos yet.',
+  '匯出檔沒有朋友名單。':'The export has no friends list.',
+
+  // Posts
+  '符合條件的貼文 {n} 篇':['{n} matching post','{n} matching posts'],
+  '沒有符合條件的貼文。可清除篩選或換一個關鍵字。':'No posts match. Clear the filters or try another keyword.',
+  '沒有可顯示的貼文，請查看匯入核對報告。':'No posts to show. See the import report.',
+  '顯示更多（剩 {n}）':'Show more ({n} left)',
+  '顯示更多':'See more',
+  '的相簿：{name}':'· album: {name}',
+  '未命名':'Untitled',
+  '和':'with',
+  ' 在一起':'',
+  '在':'at',
+  '貼文選項':'Post options',
+  '查看原始資料':'View raw data',
+  '分享的貼文：匯出檔未提供原文。':'Shared post: the export doesn’t include the original.',
+  '分享的內容：匯出檔未提供原文。':'Shared content: the export doesn’t include the original.',
+  '開啟相片':'Open photo',
+  '播放影片':'Play video',
+  '正在讀取影片…':'Loading video…',
+  '無法播放：{msg}':'Couldn’t play: {msg}',
+  '未提供路徑':'No path given',
+  '開啟外部連結 ↗':'Open external link ↗',
+  '播放音訊':'Play audio',
+  '開啟附件':'Open attachment',
+  '{n} 則留言':['{n} comment','{n} comments'],
+  '依心情查看名單':'People by reaction',
+  '匯出檔提供了 {n} 筆具名紀錄。':'The export names {n} of them.',
+  '匯出檔未提供這些心情的姓名。':'The export doesn’t say who reacted.',
+  '未註明類型':'Type not given',
+  '全部':'All',
+
+  // Reactions (names this tool gives Facebook's reaction codes)
+  '👍 讚':'👍 Like',
+  '❤️ 大心':'❤️ Love',
+  '🥰 加油':'🥰 Care',
+  '😆 哈哈':'😆 Haha',
+  '😮 哇':'😮 Wow',
+  '😢 嗚':'😢 Sad',
+  '😡 怒':'😡 Angry',
+
+  // Viewer and thumbnails
+  '正在讀取…':'Loading…',
+  '此格式可下載後開啟。':'Download this file to open it.',
+  '瀏覽器無法顯示此格式。可下載檔案，或檢查是否已完整解壓縮典藏 ZIP。':'This browser can’t show this format. Download the file, or check that the archive ZIP was fully extracted.',
+  '無法開啟：{msg}':'Couldn’t open: {msg}',
+  '點開檔案':'Open file',
+  '讀取失敗 · 點開核對':'Couldn’t load · open to check',
+
+  // Photos and friends tabs
+  '未命名相簿':'Untitled album',
+  '留言中的相片':'Photos in comments',
+  '其他相片':'Other photos',
+  '{n} 張':['{n} photo','{n} photos'],
+  '{n} 張相片':['{n} photo','{n} photos'],
+  '匯出檔裡沒有相簿。':'The export has no albums.',
+  '匯出檔裡沒有影片。':'The export has no videos.',
+  '匯出檔裡沒有相片。':'The export has no photos.',
+  '成為朋友：{when}':'Friends since {when}',
+  '沒有符合的朋友。':'No matching friends.',
+
+  // Activity log
+  '← 返回個人檔案':'← Back to profile',
+  '你寫的留言和你按的心情。':'Comments you wrote and reactions you gave.',
+  '活動類別':'Activity types',
+  '搜尋活動紀錄':'Search activity log',
+  '留言':'Comments',
+  '心情':'Reactions',
+  '對 {what} 傳達了心情。':'Reacted to {what}.',
+  '一則內容':'a post',
+  '時間未提供':'No time',
+  '查看原文 ↗':'View original ↗',
+  '沒有符合的活動紀錄。':'No matching activity.',
+  '匯出檔裡沒有留言或心情紀錄。':'The export has no comments or reactions.',
+
+  // Import report
+  '選取檔案或資料夾：{list}':'Selected files or folder: {list}',
+  '貼文 {posts} 筆 · 相簿、相片等其他紀錄 {other} 筆 · 未配對媒體 {loose} 個':'{posts} posts · {other} other records such as albums and photos · {loose} unmatched media files',
+  '留言 {c} 則 · 心情紀錄 {r} 筆':'{c} comments · {r} reactions',
+  '找到 {files} 個本機附件，其中 {images} 個是圖片。日期依目前裝置時區顯示。':'Found {files} local attachments, {images} of them images. Dates use this device’s time zone.',
+  ' 建議核對一篇最早的貼文與一篇多圖貼文。':' Check your earliest post and one post with several photos.',
+  '待核對附件（{n} 處）':'Attachments to check ({n})',
+  '此處顯示前 40 處，完整清單收在可下載的報告。':'Showing the first 40. The full list is in the downloadable report.',
+  '檢視 {n} 份來源 JSON':['View {n} source JSON file','View {n} source JSON files'],
+  '{n} 筆':['{n} record','{n} records'],
+  '原始檔':'Original file',
+  '另有 {n} 個其他類別或未辨識路徑的 JSON，檔名見完整報告，原件在 Facebook 原始 ZIP。':['1 more JSON file is from another category or an unrecognized path. Its name is in the full report; the original is in the Facebook ZIP.','{n} more JSON files are from other categories or unrecognized paths. Their names are in the full report; the originals are in the Facebook ZIP.'],
+  '下載完整核對報告':'Download full report',
+  '貼文典藏-核對報告.json':'Post-Archive-report.json',
+  '僅能核對實際提供的匯出檔；匯出中完全缺少的紀錄或附件無法計數。':'Only the export files you provided can be checked. Records or attachments missing from the export entirely can’t be counted.',
+  '已建立索引':'Indexed',
+  '原始紀錄':'Raw record',
+  '未提供':'Not given',
+  '日期未提供':'No date',
+  '社團貼文':'Group posts',
+  '相片／影片紀錄':'Photo and video records',
+  '未配對媒體':'Unmatched media',
+  '留言紀錄':'Comment records',
+  '心情紀錄':'Reaction records',
+  '其他原始紀錄':'Other raw records',
+  '找不到本機檔案':'Local file not found',
+  '只有外部連結':'External link only',
+  '有多個同名候選檔':'Several files share this name',
+  '匯出紀錄未提供附件路徑':'The export gives no attachment path',
+  '附件無法讀取':'Attachment can’t be read',
+  '{path}：{msg}':'{path}: {msg}',
+  '{path} — {msg}':'{path} — {msg}',
+
+  // Messages saved with an archive
+  '{n} 筆欄位格式待核對，可搜尋、展開原始資料':['{n} record has unrecognized fields; you can search it and open the raw data','{n} records have unrecognized fields; you can search them and open the raw data'],
+  '與其他分檔的同一份資料相同，貼文已計入':'Same data as another part; its posts are already counted',
+  '只有未分享的空白紀錄，已略過':'Only empty, unshared records; skipped',
+  '只有分享狀態或統計資料，已略過':'Only sharing status or statistics; skipped',
+  '沒有可建立索引的紀錄，請核對原始檔':'Nothing to index. Check the original file',
+  '{series} 的 JSON 編號未連續，缺少 {gaps}。請核對是否漏選匯出分檔。':'The {series} JSON parts skip numbers; missing {gaps}. Check whether an export part was left out.',
+  '讀取失敗：{msg}':'Couldn’t read: {msg}',
+  '找到 HTML 或網頁檔，但沒有辨識到貼文 JSON。請回 Facebook 選 JSON 重新匯出所有時間，或補齊含貼文的 ZIP 分檔。':'Found HTML pages but no post JSON. Export again from Facebook choosing JSON and All time, or add the ZIP parts that contain your posts.',
+  '沒有辨識到貼文 JSON。請確認個人檔案、資料類別、JSON 格式及 ZIP 分檔是否齊全。':'No post JSON found. Check the profile, the data categories, the JSON format, and that every ZIP part is there.',
+  '典藏包中缺少此檔':'This file is missing from the archive',
+  '已開啟既有典藏。若要建立新典藏，請另開一份並只選同一次 Facebook 匯出的 ZIP。':'Opened an existing archive. To make a new one, choose Open another and select only the ZIP files from one Facebook export.',
+
+  // Reading and saving
+  '正在讀取檔案清單…':'Reading the file list…',
+  '已解壓資料夾':'Extracted folder',
+  '正在讀取 {name}':'Reading {name}',
+  '正在讀取貼文資料 {i} / {n}':'Reading post data {i} / {n}',
+  '沒有讀到檔案':'No files were read',
+  '預覽完成。請按「儲存離線典藏 ZIP」建立可攜副本。':'Preview ready. Choose “Save offline archive ZIP” to make a copy you can keep.',
+  '已開啟離線典藏。':'Offline archive opened.',
+  '這份來源檔案無法讀取。請保留並核對 Facebook 原始 ZIP。':'This source file can’t be read. Keep the original Facebook ZIP and check it.',
+  '無法讀取原始檔案：{msg}':'Couldn’t read the original file: {msg}',
+  'Facebook-貼文典藏-':'Facebook-Post-Archive-',
+  '離線貼文典藏':'Offline post archive',
+  '請使用新的檔名儲存典藏，保留原始 Facebook ZIP。':'Save the archive under a new name and keep the original Facebook ZIP.',
+  '已取消儲存，可以繼續檢索貼文。':'Saving cancelled. You can keep browsing your posts.',
+  '正在校驗並封存檔案 {i} / {n} · {name}':'Checking and archiving file {i} / {n} · {name}',
+  '正在寫入離線索引與核對報告…':'Writing the offline index and import report…',
+  '典藏 ZIP 已送交瀏覽器下載。可用本工具重開，或完整解壓後開啟 index.html。{extra}':'Archive ZIP sent to your browser’s downloads. Reopen it with this tool, or extract it fully and open index.html.{extra}',
+  '典藏 ZIP 已儲存。可用本工具重開，或完整解壓後開啟 index.html。{extra}':'Archive ZIP saved. Reopen it with this tool, or extract it fully and open index.html.{extra}',
+  ' 待核對附件 {n} 處，讀取失敗檔案 {d} 個，詳見包內 report.json。':' {n} attachments to check and {d} files that couldn’t be read; see report.json in the archive.',
+  '未完成儲存：{msg}。可重新選擇儲存位置並再試一次。':'Not saved: {msg}. Choose a save location and try again.',
+  '典藏索引無法開啟：{msg}':'The archive index can’t be opened: {msg}',
+  '典藏索引格式不符':'The archive index has the wrong format',
+  '典藏項目格式不符':'An archive item has the wrong format',
+  '典藏索引的檔案路徑無效':'The archive index has an invalid file path',
+  '找不到附件':'Attachment not found',
+  '典藏包缺少這個附件':'This attachment is missing from the archive',
+
+  // ZIP reading errors
+  '檔案位移超過此瀏覽器可處理的範圍':'This file offset is larger than this browser can handle',
+  'ZIP 檔不完整，請重新下載這一包':'The ZIP file is incomplete. Download this part again',
+  'ZIP 附加欄位不完整':'A ZIP extra field is incomplete',
+  '無法讀取 ZIP 目錄，請確認此分檔已下載完成':'Can’t read the ZIP directory. Check that this part finished downloading',
+  '請先用解壓縮軟體合併跨磁碟分卷，再選擇資料夾':'Join the multi-disk parts with an unzip tool first, then choose the folder',
+  '跨磁碟分卷請先解壓縮':'Unzip multi-disk archives first',
+  'ZIP64 目錄無法讀取':'Can’t read the ZIP64 directory',
+  'ZIP 中央目錄損壞':'The ZIP central directory is damaged',
+  'ZIP 檔名或附加欄位不完整':'A ZIP file name or extra field is incomplete',
+  '缺少 ZIP64 檔案長度':'The ZIP64 file size is missing',
+  '壓縮檔已加密，請先解壓縮':'The archive is encrypted. Unzip it first',
+  '不支援此壓縮方式，請先解壓縮':'This compression method isn’t supported. Unzip it first',
+  'ZIP 項目標頭損壞':'A ZIP entry header is damaged',
+  '檔案資料不完整':'The file data is incomplete',
+  '瀏覽器無法解壓縮。請將所有 ZIP 解開並改用「選擇資料夾」':'This browser can’t decompress it. Unzip all the ZIP files and use “Choose extracted folder” instead',
+  '解壓後長度與 ZIP 紀錄不符':'The unzipped size doesn’t match the ZIP record',
+  '長度或 CRC 校驗失敗，請重新下載這一包':'Size or CRC check failed. Download this part again',
+};
+let lang='';
+try {lang=localStorage.getItem('lang')||'';} catch {}
+if (!['zh','en'].includes(lang)) lang=/^zh\b/i.test(navigator.languages?.[0]||navigator.language||'')?'zh':'en';
+const locale=()=>lang==='en'?'en-US':'zh-TW';
+// {name} placeholders: numbers get digit grouping, {t,v} objects are translated, other strings are shown as given.
+// An English entry may be [singular, plural], chosen by {n}.
+function t(key,v) {
+  const found=lang==='en'&&Object.hasOwn(en,key)?en[key]:key, s=Array.isArray(found)?found[v?.n===1?0:1]:found;
+  return v?s.replace(/\{(\w+)\}/g,(m,k)=>Object.hasOwn(v,k)?msg(v[k],true):m):s;
+}
+// Archived messages are a key or {t,v}. Archives saved before translation hold finished Chinese text, shown as is.
+function msg(x,plain=false) {
+  if (x&&typeof x==='object') return t(String(x.t??''),x.v||{});
+  if (typeof x==='number') return count(x);
+  return plain?String(x??''):t(String(x??''));
+}
+const clocks=new Map();
+function clock(name,opts) {
+  const key=lang+name;
+  if (!clocks.has(key)) clocks.set(key,new Intl.DateTimeFormat(locale(),opts));
+  return clocks.get(key);
+}
 const el=(tag,text='',cls='')=>{const node=document.createElement(tag); if (text!=='') node.textContent=text; if (cls) node.className=cls; return node;};
 const insert=(parent,tag,text,cls)=>parent.appendChild(el(tag,text,cls));
-const count=n=>n.toLocaleString('zh-TW');
-const kindNames={post:'貼文',group:'社團貼文',photo:'相片／影片紀錄',album:'相簿',loose:'未配對媒體',comment:'留言紀錄',other:'其他原始紀錄'};
+const count=n=>n.toLocaleString(locale());
+const kindNames={post:'貼文',group:'社團貼文',photo:'相片／影片紀錄',album:'相簿',loose:'未配對媒體',comment:'留言紀錄',reaction:'心情紀錄',other:'其他原始紀錄'};
 const problems={missing:'找不到本機檔案',external:'只有外部連結',ambiguous:'有多個同名候選檔',unspecified:'匯出紀錄未提供附件路徑',damaged:'附件無法讀取'};
-const archiveClock=new Intl.DateTimeFormat('zh-TW',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false});
-const formatTime=ts=>ts==null?'日期未提供':archiveClock.format(new Date(ts*1000));
+const formatTime=ts=>ts==null?t('日期未提供'):clock('archive',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(ts*1000));
 const readableSize=n=>n>=1048576?(n/1048576).toFixed(1)+' MB':Math.ceil(n/1024)+' KB';
 const normalize=s=>s.normalize('NFKC').toLocaleLowerCase();
-const setStatus=t=>{$('status').textContent=t;};
+let lastStatus='';
+const setStatus=x=>{lastStatus=x;$('status').textContent=msg(x);};
 const stamp=()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');};
 const jsonBlob=data=>new Blob([JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8'});
 function download(blob,name) {
@@ -498,12 +1639,55 @@ const embedded=$('archive-data').textContent;
 $('archive-data').textContent='null';
 const template='<!doctype html>\n'+document.documentElement.outerHTML;
 const makeIndex=data=>new Blob([template.replace(payloadTag+'null'+endScript,()=>payloadTag+safeJSON(data)+endScript)],{type:'text/html;charset=utf-8'});
-let active=null, busy=false, searchable=[], matches=[], shown=0, searchTimer=0;
+let active=null, busy=false, searchable=[], searchTimer=0;
 const busyControls=['chooseZip','chooseFolder','save','back'];
 function lock(flag) {busy=flag; for (const key of busyControls) $(key).disabled=flag;}
 function dataCheck(data) {
   if (!data || data.format!==archiveFormat || !['items','assets','sources','issues','inputs','otherJSON'].every(k=>Array.isArray(data[k]))) throw Error('典藏索引格式不符');
   if (!data.items.every(r=>r && Array.isArray(r.body)&&Array.isArray(r.attachments)&&Array.isArray(r.links))) throw Error('典藏項目格式不符');
+  if (!data.profile || typeof data.profile!=='object' || Array.isArray(data.profile)) data.profile={};
+
+  // Update previously indexed rows from the raw JSON saved alongside them.
+  const changed = new Map(), unknown = new Map(), missing = [];
+  const locations = new Set(data.items.map(r=>r.src+':'+r.locator));
+  data.items = data.items.filter(row => {
+    const source = Number.isInteger(row.src) ? data.sources[row.src] : null;
+    const stats = isShareStatistics(row.raw);
+    const unshared = !row.title && !row.links.length && !row.attachments.length &&
+        isEmptyUnsharedRecord(row.raw) && row.body.every(isNoValue);
+    if (stats || unshared) {
+      if (source) {
+        source.count--;
+        changed.set(source,stats ? onlyStatsNote : changed.get(source) || onlyUnsharedNote);
+      }
+      return false;
+    }
+    const fileKind = source?.path && postFile(source.path);
+    const kind = activityKind(row.raw,isActivity(fileKind) ? fileKind : row.kind);
+    if (isActivity(kind) && !row.activity) {
+      row.kind = kind;
+      row.activity = readActivity(row.raw || {},kind);
+      if (source) changed.set(source,changed.get(source) || '');
+    }
+    if (isPost(row)) embeddedActivity(row.raw,row.locator,(raw,childKind,loc)=>{
+      if (locations.has(row.src+':'+loc)) return;
+      const model = normalRecord(raw,childKind,row.src,loc,ref=>{
+        const found = row.attachments.find(a=>a.ref===ref);
+        return found ? {entry:found,state:found.state} : {state:webLink(ref)?'external':'missing'};
+      },ref=>ref.asset,{});
+      model.activity.parent=row.locator;
+      missing.push(model);
+      if (source) { source.count++; changed.set(source,changed.get(source) || ''); }
+    });
+    if (row.kind === 'other') unknown.set(source, (unknown.get(source) || 0) + 1);
+    return true;
+  });
+  for (const child of missing) data.items.push(child);
+  for (const [source,reason] of changed) {
+    if (!source.note || source.note.t===unknownRecordNote || String(source.note).endsWith(' 筆欄位格式待核對，可搜尋、展開原始資料')) {
+      source.note = sourceIndexNote(source.count, unknown.get(source), reason);
+    }
+  }
   return data;
 }
 function safeFile(file,type) {
@@ -511,27 +1695,27 @@ function safeFile(file,type) {
   if (!re.test(file)) throw Error('典藏索引的檔案路徑無效');
   return file;
 }
-function isPost(r) {return r.kind==='post'||r.kind==='group';}
 function issueOf(data,a) {
   if (a.state) return a.state;
   return a.asset==null || !data.assets[a.asset] || data.assets[a.asset].problem ? 'damaged' : '';
 }
 function itemYear(r){return r.ts==null?'?':String(new Date(r.ts*1000).getFullYear());}
-function itemTitle(r) {return r.title || r.body.find(t=>t.trim())?.slice(0,85) || kindNames[r.kind] || '原始紀錄';}
+function itemTitle(r) {return r.title || r.body.find(t=>t.trim())?.slice(0,85) || t(kindNames[r.kind] || '原始紀錄');}
 function allProblems(data) {
   const out=[];
   for (const r of data.items) for (const a of r.attachments) {
     const issue=issueOf(data,a);
-    if (issue) out.push({項目:itemTitle(r),時間:formatTime(r.ts),原因:problems[issue]||issue,附件:a.ref||a.label||'未提供',來源:r.src==null?'':data.sources[r.src]?.path,位置:r.locator});
+    if (issue) out.push({項目:itemTitle(r),時間:formatTime(r.ts),原因:t(problems[issue]||issue),附件:a.ref||a.label||t('未提供'),來源:r.src==null?'':data.sources[r.src]?.path,位置:r.locator});
   }
   return out;
 }
 function audit(data) {
   return {建立時間:data.created,選取分檔:data.inputs,貼文筆數:data.items.filter(isPost).length,
-    其他紀錄筆數:data.items.filter(r=>!isPost(r)&&r.kind!=='loose').length,未配對媒體筆數:data.items.filter(r=>r.kind==='loose').length,
+    留言筆數:data.items.filter(r=>r.kind==='comment').length,心情紀錄筆數:data.items.filter(r=>r.kind==='reaction').length,
+    其他紀錄筆數:data.items.filter(r=>!isPost(r)&&!isActivity(r.kind)&&r.kind!=='loose').length,未配對媒體筆數:data.items.filter(r=>r.kind==='loose').length,
     可用圖片檔數:data.assets.filter(a=>a.kind==='image'&&!a.problem).length,可用附件檔數:data.assets.filter(a=>!a.problem).length,
-    附件待核對:allProblems(data),讀取提示:data.issues,來源資料:data.sources.map(s=>({原始分檔:s.bundle,路徑:s.path,典藏檔:s.problem?null:s.file,索引項目:s.count,狀態:s.note||'已建立索引',檔案問題:s.problem||''})),
-    未納入索引的其他JSON路徑:data.otherJSON,範圍:'僅能核對實際提供的匯出檔；匯出中完全缺少的紀錄或附件無法計數。'};
+    附件待核對:allProblems(data),讀取提示:data.issues.map(x=>msg(x)),來源資料:data.sources.map(s=>({原始分檔:s.bundle,路徑:s.path,典藏檔:s.problem?null:s.file,索引項目:s.count,狀態:msg(s.note||'已建立索引'),檔案問題:msg(s.problem||'')})),
+    未納入索引的其他JSON路徑:data.otherJSON,範圍:t('僅能核對實際提供的匯出檔；匯出中完全缺少的紀錄或附件無法計數。')};
 }
 async function uriFor(id) {
   const owner=active, a=owner.data.assets[id];
@@ -543,40 +1727,80 @@ async function uriFor(id) {
   return URL.createObjectURL(blob.slice(0,blob.size,mediaType(a.file).mime));
 }
 function release(url) {if (url?.startsWith('blob:')) URL.revokeObjectURL(url);}
-let viewerURL='', viewerToken=0;
+// ---- Facebook-style profile view ----
+const longClock=()=>clock('long',{year:'numeric',month:'long',day:'numeric',hour:'numeric',minute:'2-digit'});
+const dayClock=()=>clock('day',{year:'numeric',month:'long',day:'numeric'});
+const hourClock=()=>clock('hour',{hour:'numeric',minute:'2-digit'});
+const monthClock=()=>clock('month',{year:'numeric',month:'long'});
+const timeOf=(c,ts)=>ts==null?t('日期未提供'):c().format(new Date(ts*1000));
+const initial=name=>[...String(name||'').trim()][0]||'?';
+const asArray=v=>Array.isArray(v)?v:[];
+const factIcons={
+  work:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6a2 2 0 0 1 2 2v2h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h3V5a2 2 0 0 1 2-2zm0 4h6V5H9z"/></svg>',
+  home:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 11.5h3V21h5.5v-6h3v6H19v-9.5h3z"/></svg>',
+};
+const blankMe={name:'',avatar:null,cover:null,friends:null,url:'',coverURL:''};
+let me={...blankMe}, photoSets=null, photoView={sub:'photos',album:null}, rendered={}, activityFilter='', activityRows=null, friendTimer=0, activityTimer=0;
+
+// Viewer: one dialog for every photo, video or file. Arrows move within the list it was opened with.
+let viewer={items:[],index:0}, viewerURL='', viewerToken=0;
 function dismiss() {
   viewerToken++; $('viewMedia').replaceChildren(); $('downloadMedia').hidden=true; $('downloadMedia').removeAttribute('href');
   release(viewerURL);viewerURL='';
 }
 $('closeViewer').onclick=()=>$('lightbox').close();
-$('lightbox').addEventListener('close',dismiss);
-async function openAsset(id,label='') {
-  const a=active.data.assets[id]; if (!a) return;
-  dismiss(); const ticket=viewerToken;
-  $('viewerTitle').textContent=label||baseName(a.path);
-  $('viewerInfo').textContent=baseName(a.path)+' · '+readableSize(a.size);
-  $('viewMedia').textContent='正在讀取附件…';
+$('lightbox').addEventListener('close',()=>{dismiss();viewer={items:[],index:0};});
+$('prevMedia').onclick=()=>step(-1);
+$('nextMedia').onclick=()=>step(1);
+$('lightbox').addEventListener('keydown',e=>{
+  if (e.target.closest('video,audio')) return;
+  if (e.key==='ArrowLeft') {e.preventDefault();step(-1);}
+  if (e.key==='ArrowRight') {e.preventDefault();step(1);}
+});
+function step(delta) {
+  const n=viewer.items.length;
+  if (n<2) return;
+  viewer.index=(viewer.index+delta+n)%n; showMedia();
+}
+function openViewer(items,index) {
+  viewer={items,index};
   if (!$('lightbox').open) $('lightbox').showModal();
+  showMedia();
+}
+async function showMedia() {
+  const item=viewer.items[viewer.index], a=active.data.assets[item.asset], many=viewer.items.length>1;
+  dismiss(); const ticket=viewerToken;
+  $('prevMedia').hidden=$('nextMedia').hidden=!many;
+  $('viewerHead').replaceChildren(...(item.record?[postHead(item.record)]:[]));
+  $('viewerText').textContent=item.record?postLines(item.record).join('\n\n'):'';
+  $('viewerCaption').textContent=item.label||'';
+  $('viewerInfo').textContent=(a?baseName(a.path)+' · '+readableSize(a.size):'')+(many?' · '+(viewer.index+1)+' / '+viewer.items.length:'');
+  if (!a) return;
+  $('viewMedia').textContent=t('正在讀取…');
   try {
-    const url=await uriFor(id);
+    const url=await uriFor(item.asset);
     if (ticket!==viewerToken) {release(url);return;}
     viewerURL=url;const dl=$('downloadMedia'); dl.href=url;dl.download=baseName(a.path);dl.hidden=false;
-    const canPreview=['image','video','audio'].includes(a.kind);
     const holder=$('viewMedia');holder.replaceChildren();
-    if (!canPreview) {holder.textContent='此格式可下載後開啟。';return;}
+    if (!['image','video','audio'].includes(a.kind)) {holder.textContent=t('此格式可下載後開啟。');return;}
     const n=el(a.kind==='image'?'img':a.kind);
-    if (a.kind==='image') n.alt=label||baseName(a.path); else n.controls=true;
-    n.onerror=()=>{holder.textContent='瀏覽器無法顯示此格式。可下載檔案，或檢查是否已完整解壓縮典藏 ZIP。';};
+    if (a.kind==='image') n.alt=item.label||baseName(a.path); else n.controls=true;
+    n.onerror=()=>{holder.textContent=t('瀏覽器無法顯示此格式。可下載檔案，或檢查是否已完整解壓縮典藏 ZIP。');};
     holder.append(n);n.src=url;
-  } catch (err) {if(ticket===viewerToken)$('viewMedia').textContent='無法開啟：'+err.message;}
+  } catch (err) {if(ticket===viewerToken)$('viewMedia').textContent=t('無法開啟：{msg}',{msg:{t:err.message}});}
 }
+
+// Thumbnails load only while near the screen, at most three at a time.
 const thumbState=new Map(), thumbQueue=[]; let thumbWorkers=0;
 function disposeThumb(node,state) {
-  state.visible=false;state.serial++;release(state.url);state.url='';node.replaceChildren();node.textContent='相片';
+  state.visible=false;state.serial++;release(state.url);state.url='';node.replaceChildren();
 }
-function resetThumbs() {
-  for (const [n,s] of thumbState) {thumbObserver?.unobserve(n);disposeThumb(n,s);}
-  thumbState.clear();thumbQueue.length=0;
+function resetThumbs(root) {
+  for (const [n,s] of thumbState) {
+    if (root && n.isConnected && !root.contains(n)) continue;
+    thumbObserver?.unobserve(n);disposeThumb(n,s);thumbState.delete(n);
+  }
+  if (!root) thumbQueue.length=0;
 }
 function drainThumbs() {
   while (thumbWorkers<3 && thumbQueue.length) {
@@ -587,10 +1811,15 @@ function drainThumbs() {
       try {
         const url=await uriFor(s.id);
         if (!s.visible||s.serial!==ticket||!node.isConnected) {release(url);return;}
-        s.url=url;const image=el('img');image.alt=s.label;image.decoding='async';
-        image.onerror=()=>{if(s.serial===ticket)node.textContent='點開檔案';};
+        s.url=url;const image=el('img');image.alt='';image.decoding='async';
+        image.onload = () => {
+          if (s.serial === ticket && image.naturalHeight) {
+            node.style.setProperty('--photo-ratio', image.naturalWidth + ' / ' + image.naturalHeight);
+          }
+        };
+        image.onerror=()=>{if(s.serial===ticket)node.textContent=t('點開檔案');};
         node.replaceChildren(image);image.src=url;
-      } catch { if(s.serial===ticket)node.textContent='讀取失敗 · 點開核對'; }
+      } catch { if(s.serial===ticket)node.textContent=t('讀取失敗 · 點開核對'); }
       finally {thumbWorkers--;drainThumbs();}
     })();
   }
@@ -603,34 +1832,195 @@ const thumbObserver=typeof IntersectionObserver==='function'?new IntersectionObs
     if(ch.isIntersecting)scheduleThumb(ch.target);else if(s.visible)disposeThumb(ch.target,s);
   }
 },{rootMargin:'260px'}):null;
-function mediaTiles(holder,record) {
-  const gallery=insert(holder,'div','','gallery'), notices=el('div');
-  let pos=0;
-  const more=el('button','更多附件','link-button');
-  function page() {
-    const end=Math.min(pos+12,record.attachments.length);
-    for (;pos<end;pos++) {
-      const ref=record.attachments[pos],issue=issueOf(active.data,ref);
-      if (issue) {
-        const n=insert(notices,'p','','notice small');
-        n.append(document.createTextNode((problems[issue]||issue)+' · '+(ref.label||fixedText(ref.ref)||'未提供路徑')));
-        if (issue==='external'&&webLink(ref.ref)) {n.append(' ');const a=insert(n,'a','開啟外部連結 ↗');a.href=absoluteWeb(ref.ref);a.target='_blank';a.rel='noopener noreferrer';}
-        continue;
-      }
-      const a=active.data.assets[ref.asset], tile=insert(gallery,'button','','tile'),caption=ref.label||baseName(a.path);
-      tile.type='button';tile.title='開啟 '+caption;tile.onclick=()=>openAsset(ref.asset,caption);
-      const thumb=insert(tile,'span',({image:'相片',video:'播放影片',audio:'播放音訊',file:'開啟附件'})[a.kind]||'開啟附件','thumb');
-      insert(tile,'span',caption,'cap');
-      if (a.kind==='image') {
-        thumbState.set(thumb,{id:ref.asset,label:caption,visible:false,serial:0,url:''});
-        if(thumbObserver)thumbObserver.observe(thumb);else setTimeout(()=>scheduleThumb(thumb),0);
-      }
-    }
-    gallery.hidden=!gallery.children.length;more.hidden=pos>=record.attachments.length;
-    more.textContent='顯示更多附件（剩 '+(record.attachments.length-pos)+'）';
-  }
-  holder.append(notices,more);more.onclick=page;page();
+function watchThumb(node,id) {
+  thumbState.set(node,{id,visible:false,serial:0,url:''});
+  if(thumbObserver)thumbObserver.observe(node);else setTimeout(()=>scheduleThumb(node),0);
 }
+
+// Lists grow as the reader scrolls. The button stays as a keyboard fallback.
+function clearList(node) {
+  resetThumbs(node);
+  for (const v of node.querySelectorAll('video')) release(v.src);
+  node.replaceChildren();
+}
+function pager(container,more,rows,render,size=20) {
+  let pos=0;
+  const page=()=>{
+    const f=document.createDocumentFragment(), end=Math.min(pos+size,rows.length);
+    for(;pos<end;pos++)f.append(render(rows[pos],pos));
+    container.append(f);
+    more.hidden=pos>=rows.length;
+    more.textContent=t('顯示更多（剩 {n}）',{n:rows.length-pos});
+  };
+  more.onclick=page;page();
+}
+const autoMore=typeof IntersectionObserver==='function'?new IntersectionObserver(changes=>{
+  for (const ch of changes) {
+    if (!ch.isIntersecting||ch.target.hidden) continue;
+    ch.target.click();
+    autoMore.unobserve(ch.target);autoMore.observe(ch.target); // Re-check: a short page may leave it in view.
+  }
+},{rootMargin:'0px 0px 900px'}):null;
+for (const id of ['more','photoMore','friendMore','activityMore']) autoMore?.observe($(id));
+
+// Post text and captions. Album names such as 行動上傳 are Facebook labels, not words the author wrote.
+const titleCache=new WeakMap();
+function titlesOf(r) {
+  if (titleCache.has(r)) return titleCache.get(r);
+  const out=new Set(), walk=v=>{
+    if (Array.isArray(v)) {for (const x of v) walk(x);return;}
+    if (!v||typeof v!=='object') return;
+    for (const [k,x] of Object.entries(v)) {if (k==='title'&&typeof x==='string') out.add(fixedText(x)); else walk(x);}
+  };
+  walk(r.raw);titleCache.set(r,out);return out;
+}
+function postLines(r) {
+  if (r.kind==='album') return r.raw?.description?[fixedText(r.raw.description)]:[];
+  const own=[...asArray(r.raw?.data).map(d=>d?.post),
+    ...asArray(r.raw?.attachments).flatMap(a=>asArray(a?.data)).map(d=>typeof d?.text==='string'?d.text:'')]
+    .map(fixedText).filter(t=>t.trim());
+  if (own.length) return own;
+  const titles=titlesOf(r);
+  return r.body.filter(t=>!titles.has(t));
+}
+function caption(r,label) {
+  return label && !postLines(r).includes(label) && !titlesOf(r).has(label) ? label : '';
+}
+function actionText(r) {
+  if (r.kind==='album') return t('的相簿：{name}',{name:r.title||t('未命名')});
+  if (!isPost(r)) return '';
+  const title=r.title||'';
+  return title.startsWith(me.name)?title.slice(me.name.length).trim():title;
+}
+function tagNames(r) {
+  return asArray(r.raw?.tags).map(t=>fixedText(typeof t==='string'?t:t?.name)).filter(Boolean);
+}
+function placeName(r) {
+  for (const a of asArray(r.raw?.attachments)) for (const d of asArray(a?.data)) if (d?.place?.name) return fixedText(d.place.name);
+  return '';
+}
+const isShared=r=>isPost(r)&&/分享了|shared/i.test(r.title);
+
+function avatar(cls='') {
+  const a=el('span','','avatar me'+(cls?' '+cls:''));a.setAttribute('aria-hidden','true');paintAvatar(a);return a;
+}
+function paintAvatar(a) {
+  if (me.url) {const i=el('img');i.alt='';i.src=me.url;a.replaceChildren(i);} else a.textContent=initial(me.name);
+}
+async function loadPortraits() {
+  const owner=active;
+  for (const [key,id] of [['url',me.avatar],['coverURL',me.cover]]) {
+    if (id==null) continue;
+    try {const url=await uriFor(id); if(active!==owner){release(url);return;} me[key]=url;} catch {}
+  }
+  if (me.url) for (const a of document.querySelectorAll('.avatar.me')) paintAvatar(a);
+  if (me.coverURL) {const i=el('img');i.alt='';i.src=me.coverURL;$('coverPhoto').replaceChildren(i);}
+}
+
+function postHead(r,menu=false) {
+  const head=el('header','','posthead');
+  head.append(avatar());
+  const who=insert(head,'div','','who'), line=insert(who,'p','','byline');
+  insert(line,'strong',me.name);
+  const action=actionText(r);
+  if (action) line.append(' '+action);
+  const tags=tagNames(r), place=placeName(r);
+  if (tags.length) {line.append(' — '+t('和')+' ');insert(line,'strong',tags.join(', '));line.append(t(' 在一起'));}
+  if (place) {line.append(' — '+t('在')+' ');insert(line,'strong',place);}
+  insert(who,'p',timeOf(longClock,r.ts),'when');
+  if (menu && r.src!=null) head.append(postMenu(r));
+  return head;
+}
+function postMenu(r) {
+  const d=el('details','','postmenu'), s=insert(d,'summary','⋯'), menu=insert(d,'div','','menu');
+  s.setAttribute('aria-label',t('貼文選項'));
+  const view=insert(menu,'button',t('查看原始資料'));view.type='button';view.onclick=()=>{d.open=false;showRaw(r);};
+  const get=insert(menu,'button',t('下載原始 JSON 檔'));get.type='button';get.onclick=()=>{d.open=false;originalFile(r.src);};
+  return d;
+}
+document.addEventListener('click',e=>{
+  for (const d of document.querySelectorAll('details.postmenu[open]')) if (!d.contains(e.target)) d.open=false;
+});
+function showRaw(r) {
+  const s=active.data.sources[r.src];
+  $('rawPath').textContent=(s?.path||'')+'  ·  '+r.locator;
+  $('rawBody').textContent=JSON.stringify(r.raw,(k,v)=>typeof v==='string'?fixedText(v):v,2);
+  $('rawDownload').onclick=()=>originalFile(r.src);
+  $('rawDialog').showModal();
+}
+$('closeRaw').onclick=()=>$('rawDialog').close();
+
+function textBlock(box,text) {
+  const p=insert(box,'p',text,'posttext');
+  if (text.split('\n').length<=5 && text.length<=280) return;
+  p.classList.add('clamp');
+  const more=insert(box,'button',t('顯示更多'),'link-button seemore');more.type='button';
+  more.onclick=()=>{p.classList.remove('clamp');more.remove();};
+}
+function linkCards(parent,links) {
+  for (const link of links) {
+    if (!webLink(link.url)) continue;
+    const a=insert(parent,'a','','linkcard');a.href=absoluteWeb(link.url);a.target='_blank';a.rel='noopener noreferrer';
+    let host='';try{host=new URL(absoluteWeb(link.url)).hostname.replace(/^www\./,'');}catch{}
+    insert(a,'span',host,'host');insert(a,'strong',link.label&&link.label!==link.url?link.label:link.url);
+  }
+}
+function sharedBox(box,r) {
+  const s=insert(box,'div','','shared');
+  if (!/連結|link/i.test(r.title)) insert(s,'p',t('分享的貼文：匯出檔未提供原文。'),'small muted');
+  linkCards(s,r.links);
+  if (!s.children.length) insert(s,'p',t('分享的內容：匯出檔未提供原文。'),'small muted');
+}
+function photoTile(parent,items,i,cls='tile') {
+  const item=items[i], tile=insert(parent,'button','',cls);tile.type='button';
+  tile.setAttribute('aria-label',t('開啟相片')+(item.label?' '+item.label.slice(0,60):''));
+  tile.onclick=()=>openViewer(items,i);
+  watchThumb(insert(tile,'span','','thumb'),item.asset);
+  return tile;
+}
+function videoTile(box,item) {
+  const b=insert(box,'button','','video-tile');b.type='button';
+  b.setAttribute('aria-label',t('播放影片')+(item.label?' '+item.label.slice(0,60):''));
+  insert(b,'span','▶','play');const note=insert(b,'span','','small');
+  b.onclick=async()=>{
+    b.disabled=true;note.textContent=t('正在讀取影片…');
+    try {
+      const url=await uriFor(item.asset), v=el('video','','inline-video');
+      v.controls=true;v.playsInline=true;v.src=url;b.replaceWith(v);v.play().catch(()=>{});
+    } catch(err) {b.disabled=false;note.textContent=t('無法播放：{msg}',{msg:{t:err.message}});}
+  };
+}
+function mediaBlock(box,r) {
+  const data=active.data, images=[], videos=[], files=[];
+  for (const ref of r.attachments) {
+    const issue=issueOf(data,ref);
+    if (issue) {
+      const n=insert(box,'p','','notice');
+      n.append(t(problems[issue]||issue)+' · '+(ref.label||fixedText(ref.ref)||t('未提供路徑')));
+      if (issue==='external'&&webLink(ref.ref)) {n.append(' ');const a=insert(n,'a',t('開啟外部連結 ↗'));a.href=absoluteWeb(ref.ref);a.target='_blank';a.rel='noopener noreferrer';}
+      continue;
+    }
+    const kind=data.assets[ref.asset].kind, item={asset:ref.asset,label:caption(r,ref.label),record:r};
+    (kind==='image'?images:kind==='video'?videos:files).push(item);
+  }
+  if (images.length) {
+    const gallery=insert(box,'div','','gallery'), shown=Math.min(images.length,5);
+    gallery.dataset.count=String(shown);
+    for (let i=0;i<shown;i++) {
+      const tile=photoTile(gallery,images,i);
+      if (i===shown-1&&images.length>shown) insert(tile,'span','+'+count(images.length-shown),'overflow');
+    }
+  }
+  for (const v of videos) videoTile(box,v);
+  if (files.length) {
+    const list=insert(box,'div','','file-list');
+    files.forEach((f,i)=>{
+      const a=data.assets[f.asset], tile=insert(list,'button','','file-tile');tile.type='button';tile.onclick=()=>openViewer(files,i);
+      insert(tile,'span',t(a.kind==='audio'?'播放音訊':'開啟附件'),'filekind');insert(tile,'span',f.label||baseName(a.path),'filename');
+    });
+  }
+}
+
 async function originalFile(id) {
   const s=active.data.sources[id];
   if (!s||s.problem) {setStatus('這份來源檔案無法讀取。請保留並核對 Facebook 原始 ZIP。');return;}
@@ -638,100 +2028,409 @@ async function originalFile(id) {
     if (active.mode==='static') {
       const a=el('a');a.href=safeFile(s.file,'source');a.download=baseName(s.path);document.body.append(a);a.click();a.remove();
     } else download(await inspectEntry(active.sources[id],true),baseName(s.path));
-  } catch(err) {setStatus('無法讀取原始檔案：'+err.message);}
+  } catch(err) {setStatus({t:'無法讀取原始檔案：{msg}',v:{msg:{t:err.message}}});}
+}
+// Only exports that tie reactions or comments to a post reach this point; nothing here is inferred.
+function showReactions(box,thread) {
+  const observed = new Map();
+  for (const row of thread.reactions) {
+    const type = row.activity.type || '未註明類型';
+    observed.set(type,(observed.get(type)||0)+1);
+  }
+  for (const [type,n] of thread.counts) observed.set(type,Math.max(observed.get(type)||0,n));
+  const total = Math.max(thread.total,[...observed.values()].reduce((sum,n)=>sum+n,0));
+  if (!total) return;
+  const details = insert(box,'details','','thread');
+  insert(details,'summary',[...observed.keys()].map(k=>k.split(' ')[0]).join('')+' '+count(total));
+  details.addEventListener('toggle',()=>{
+    if (!details.open || details.children.length>1) return;
+    const filters = insert(details,'div','','reaction-filters'), list = insert(details,'ul','','people');
+    const note = insert(details,'p','','small muted');
+    filters.setAttribute('role','group'); filters.setAttribute('aria-label',t('依心情查看名單'));
+    function select(type) {
+      list.replaceChildren();
+      for (const button of filters.children) button.setAttribute('aria-pressed',String(button.value===type));
+      const rows = thread.reactions.filter(r=>!type || (r.activity.type||'未註明類型')===type);
+      for (const {activity} of rows) {
+        if (!activity.actor) continue;
+        const li=insert(list,'li'); insert(li,'span',activity.actor); insert(li,'span',t(activity.type||'未註明類型'));
+      }
+      const names = list.children.length, expected = type ? observed.get(type) : total;
+      note.hidden = names>=expected;
+      note.textContent = names ? t('匯出檔提供了 {n} 筆具名紀錄。',{n:names}) : t('匯出檔未提供這些心情的姓名。');
+    }
+    for (const [type,n] of [['',total],...observed]) {
+      const button=insert(filters,'button',t(type||'全部')+' '+count(n)); button.type='button'; button.value=type;
+      button.onclick=()=>select(type);
+    }
+    select('');
+  });
+}
+function commentBubble(r) {
+  const row=el('div','','comment'), who=r.activity?.actor||'';
+  insert(row,'span',initial(who),'avatar small').setAttribute('aria-hidden','true');
+  const col=insert(row,'div'), bubble=insert(col,'div','','bubble');
+  insert(bubble,'strong',who||t('留言'));
+  for (const t of r.body) insert(bubble,'p',t,'posttext');
+  if (r.attachments.length) mediaBlock(col,r);
+  insert(col,'p',timeOf(longClock,r.ts),'when');
+  return row;
+}
+function showThread(box,thread) {
+  if (!thread) return;
+  showReactions(box,thread);
+  if (!thread.comments.length) return;
+  const d=insert(box,'details','','thread'), s=insert(d,'summary',t('{n} 則留言',{n:thread.comments.length}));
+  d.addEventListener('toggle',()=>{
+    if (!d.open||s.nextElementSibling) return;
+    for (const c of thread.comments) d.append(commentBubble(c));
+  });
 }
 function card(r) {
-  const box=el('article','','post panel'), h=insert(box,'div','','posthead');
-  insert(h,'span',kindNames[r.kind]||'其他紀錄','kind');insert(h,'span',formatTime(r.ts));
-  if(r.title)insert(box,'h3',r.title);
-  for(const t of r.body)insert(box,'p',t,'posttext');
-  if(!r.title&&!r.body.length&&!r.attachments.length&&!r.links.length)insert(box,'p','此筆紀錄的內容可在原始欄位中查看。','muted');
-  if(r.links.length) {
-    const ul=insert(box,'ul','','links');for(const link of r.links){if(!webLink(link.url))continue;const a=insert(insert(ul,'li'),'a',link.label||link.url);
-      a.href=absoluteWeb(link.url);a.target='_blank';a.rel='noopener noreferrer';}
-  }
-  if(r.attachments.length)mediaTiles(box,r);
-  if(r.src!=null) {
-    const d=insert(box,'details','','record');insert(d,'summary','查看來源與原始欄位');
-    d.addEventListener('toggle',()=>{
-      if (!d.open||d.children.length>1) return;
-      const s=active.data.sources[r.src];
-      insert(d,'p',(s?.path||'')+'  ·  '+r.locator,'muted');insert(d,'pre',JSON.stringify(r.raw,null,2));
-      const btn=insert(d,'button','下載這份原始 JSON','link-button');btn.onclick=()=>originalFile(r.src);
-    });
-  } else if(r.kind==='loose')insert(box,'p','匯出資料夾中有這個檔案，未找到能確定對應貼文的紀錄。','small muted');
+  const box=el('article','','post card');
+  box.append(postHead(r,true));
+  const lines=postLines(r);
+  if (lines.length) textBlock(box,lines.join('\n\n'));
+  if (isShared(r)) sharedBox(box,r); else linkCards(box,r.links);
+  if (r.attachments.length) mediaBlock(box,r);
+  showThread(box,active.threadFor.get(r));
   return box;
 }
-function addPage() {
-  const until=Math.min(shown+30,matches.length), fragment=document.createDocumentFragment();
-  for (;shown<until;shown++) fragment.append(card(active.data.items[matches[shown]]));
-  $('items').append(fragment);$('more').hidden=shown===matches.length;
-  $('more').textContent='顯示更多（剩 '+count(matches.length-shown)+' 筆）';
-}
+
+// Feed
 function refresh() {
-  if(!active)return;clearTimeout(searchTimer);resetThumbs();
-  const terms=normalize($('search').value.trim()).split(/\s+/).filter(Boolean), year=$('year').value, f=$('filter').value, newest=$('order').value==='new', data=active.data;
-  matches=[];
+  if (!active) return;
+  clearTimeout(searchTimer);
+  const data=active.data, terms=normalize($('search').value.trim()).split(/\s+/).filter(Boolean);
+  const year=$('year').value, newest=$('order').value==='new', rows=[];
   data.items.forEach((r,i)=>{
-    if (year && itemYear(r)!==year) return;
-    if (f==='posts'&&!isPost(r)||f==='group'&&r.kind!=='group'||f==='loose'&&r.kind!=='loose') return;
-    if (f==='image'&&!r.attachments.some(a=>a.asset!=null?data.assets[a.asset]?.kind==='image':a.hint==='image')) return;
-    if (f==='need'&&!r.attachments.some(a=>issueOf(data,a))) return;
-    if(terms.length&&!terms.every(t=>searchable[i].includes(t)))return;
-    matches.push(i);
+    if (!isPost(r) || year&&itemYear(r)!==year || terms.length&&!terms.every(t=>searchable[i].includes(t))) return;
+    rows.push(i);
   });
-  matches.sort((i,j)=>{
+  rows.sort((i,j)=>{
     const a=data.items[i].ts,b=data.items[j].ts;
     if(a==null||b==null)return a==null?(b==null?i-j:1):-1;
     return (newest?b-a:a-b)||i-j;
   });
-  shown=0;$('items').replaceChildren();$('resultCount').textContent=count(matches.length)+' 筆結果';
-  $('clear').hidden=!terms.length&&!year&&!f&&newest;
-  if (!matches.length) insert($('items'),'div',data.items.length?'沒有符合條件的項目。可清除篩選或換一個關鍵字。':'沒有可顯示的紀錄，請查看匯入核對報告。','empty panel');
-  addPage();
+  $('filterSummary').hidden=!terms.length&&!year&&newest;
+  $('resultCount').textContent=t('符合條件的貼文 {n} 篇',{n:rows.length});
+  clearList($('items'));
+  if (!rows.length) insert($('items'),'div',t(data.items.some(isPost)?'沒有符合條件的貼文。可清除篩選或換一個關鍵字。':'沒有可顯示的貼文，請查看匯入核對報告。'),'empty card');
+  pager($('items'),$('more'),rows,i=>card(data.items[i]));
 }
-$('more').onclick=addPage;
 $('search').oninput=()=>{clearTimeout(searchTimer);searchTimer=setTimeout(refresh,130);};
-for(const id of ['year','filter','order'])$(id).onchange=refresh;
-function clearFilters() {$('search').value='';$('year').value='';$('filter').value='';$('order').value='new';}
-$('clear').onclick=()=>{clearFilters();refresh();};
+for (const id of ['year','order']) $(id).onchange=refresh;
+function clearFilters() {$('search').value='';$('year').value='';$('order').value='new';}
+$('clear').onclick=$('clearFilter').onclick=()=>{clearFilters();refresh();};
+$('openFilter').onclick=()=>$('filterDialog').showModal();
+$('closeFilter').onclick=$('doneFilter').onclick=()=>$('filterDialog').close();
+
+// Tabs
+function showTab(name) {
+  for (const b of document.querySelectorAll('#profileTabs [role="tab"]')) {
+    const on=b.dataset.tab===name;
+    b.setAttribute('aria-selected',String(on));b.tabIndex=on?0:-1;$('panel-'+b.dataset.tab).hidden=!on;
+  }
+  if (name==='photos'&&!rendered.photos) {rendered.photos=true;showPhotos('photos');}
+  if (name==='friends'&&!rendered.friends) {rendered.friends=true;renderFriends();}
+}
+function arrowTabs(group,activate) {
+  group.addEventListener('keydown',e=>{
+    const tabs=[...group.querySelectorAll('[role="tab"]')], i=tabs.indexOf(document.activeElement);
+    if (i<0||!['ArrowLeft','ArrowRight'].includes(e.key)) return;
+    const next=tabs[(i+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length];
+    next.focus();activate(next);
+  });
+}
+for (const b of document.querySelectorAll('#profileTabs [role="tab"]')) b.onclick=()=>showTab(b.dataset.tab);
+arrowTabs($('profileTabs'),b=>showTab(b.dataset.tab));
+for (const b of document.querySelectorAll('[data-goto]')) b.onclick=()=>{
+  showTab(b.dataset.goto);
+  window.scrollTo({top:$('profileTabs').getBoundingClientRect().top+window.scrollY-$('profileTabs').offsetHeight-64});
+};
+
+// Photos tab: every post photo, the albums from the export, and videos.
+function photoCollections() {
+  if (photoSets) return photoSets;
+  const data=active.data, byTime=(a,b)=>(b.ts??-Infinity)-(a.ts??-Infinity)||0;
+  const collect=(r,out,seen,kind,refs=r.attachments)=>{
+    for (const ref of refs) {
+      if (ref.asset==null||issueOf(data,ref)||data.assets[ref.asset].kind!==kind||seen.has(ref.asset)) continue;
+      seen.add(ref.asset);out.push({asset:ref.asset,label:caption(r,ref.label),record:r});
+    }
+  };
+  const photos=[], videos=[], seenPhotos=new Set(), seenVideos=new Set();
+  for (const r of data.items.filter(isPost).sort(byTime)) {collect(r,photos,seenPhotos,'image');collect(r,videos,seenVideos,'video');}
+  for (const r of [...data.items].sort(byTime)) collect(r,videos,seenVideos,'video');
+  const albums=data.items.filter(r=>r.kind==='album').map(r=>{
+    const taken=new Map(asArray(r.raw?.photos).map(p=>[p?.uri,toEpoch(p?.creation_timestamp)??0]));
+    const refs=[...r.attachments].sort((a,b)=>(taken.get(b.ref)??0)-(taken.get(a.ref)??0)), items=[];
+    collect(r,items,new Set(),'image',refs);
+    return {title:r.title||'未命名相簿',ours:!r.title,items};
+  });
+  const extra=(title,test)=>{
+    const items=[], seen=new Set();
+    for (const r of data.items.filter(test).sort(byTime)) collect(r,items,seen,'image');
+    return {title,ours:true,items};
+  };
+  albums.push(extra('留言中的相片',r=>r.kind==='photo'&&/uncategori[sz]ed/i.test(data.sources[r.src]?.path||'')),
+    extra('其他相片',r=>r.kind==='loose'));
+  return photoSets={photos,videos,albums:albums.filter(a=>a.items.length)};
+}
+const albumName=set=>set.ours?t(set.title):set.title;
+function videoCell(items,i) {
+  const item=items[i], b=el('button','','vcell');b.type='button';
+  b.setAttribute('aria-label',t('播放影片')+(item.label?' '+item.label.slice(0,60):''));
+  insert(b,'span','▶','play');insert(b,'span',item.record?.ts!=null?timeOf(dayClock,item.record.ts):'','small');
+  b.onclick=()=>openViewer(items,i);
+  return b;
+}
+function showPhotos(sub,album=null) {
+  const sets=photoCollections(), grid=$('photoGrid');
+  photoView={sub,album};
+  for (const b of document.querySelectorAll('#photoTabs [role="tab"]')) {
+    const on=b.dataset.sub===sub;b.setAttribute('aria-selected',String(on));b.tabIndex=on?0:-1;
+  }
+  $('albumBar').hidden=!album;
+  if (album) $('albumTitle').textContent=albumName(album)+' · '+t('{n} 張',{n:album.items.length});
+  clearList(grid);
+  if (sub==='albums'&&!album) {
+    grid.className='albumgrid';
+    if (!sets.albums.length) insert(grid,'p',t('匯出檔裡沒有相簿。'),'empty');
+    pager(grid,$('photoMore'),sets.albums,set=>{
+      const b=el('button','','album');b.type='button';b.onclick=()=>showPhotos('albums',set);
+      watchThumb(insert(b,'span','','thumb'),set.items[0].asset);
+      insert(b,'strong',albumName(set));insert(b,'span',t('{n} 張相片',{n:set.items.length}),'small muted');
+      return b;
+    });
+    return;
+  }
+  grid.className='photogrid';
+  const items=album?album.items:sub==='videos'?sets.videos:sets.photos;
+  if (!items.length) insert(grid,'p',t(sub==='videos'?'匯出檔裡沒有影片。':'匯出檔裡沒有相片。'),'empty');
+  pager(grid,$('photoMore'),items,(item,i)=>sub==='videos'?videoCell(items,i):photoTile(el('div'),items,i),30);
+}
+for (const b of document.querySelectorAll('#photoTabs [role="tab"]')) b.onclick=()=>showPhotos(b.dataset.sub);
+arrowTabs($('photoTabs'),b=>showPhotos(b.dataset.sub));
+$('albumBack').onclick=()=>showPhotos('albums');
+
+// Friends tab
+function friendCard(f) {
+  const c=el('div','','friend');
+  insert(c,'span',initial(f.name),'face').setAttribute('aria-hidden','true');
+  const info=insert(c,'div');insert(info,'strong',f.name);
+  if (f.ts!=null) insert(info,'span',t('成為朋友：{when}',{when:timeOf(monthClock,f.ts)}),'small muted');
+  return c;
+}
+function renderFriends() {
+  const friends=me.friends||[], q=normalize($('friendSearch').value.trim()), grid=$('friendGrid');
+  const rows=friends.filter(f=>!q||normalize(f.name).includes(q));
+  clearList(grid);
+  if (!rows.length) insert(grid,'p',t(friends.length?'沒有符合的朋友。':'匯出檔沒有朋友名單。'),'empty');
+  pager(grid,$('friendMore'),rows,friendCard,60);
+}
+$('friendSearch').oninput=()=>{clearTimeout(friendTimer);friendTimer=setTimeout(renderFriends,130);};
+
+// Left column on the posts tab
+function renderSide() {
+  const intro=$('introBody');intro.replaceChildren();
+  if (me.bio) insert(intro,'p',me.bio,'intro-bio');
+  const facts=insert(intro,'ul','','facts'), fact=(icon,text)=>{const li=insert(facts,'li');li.innerHTML=factIcons[icon];insert(li,'span',text);};
+  const w=me.work;
+  if (w?.employer) fact('work',w.title?t('在 {org} 擔任 {title}',{org:w.employer,title:w.title}):t('在 {org} 工作',{org:w.employer}));
+  else if (w?.title) fact('work',w.title);
+  if (me.city) fact('home',t('住在 {city}',{city:me.city}));
+  if (!facts.children.length) facts.remove();
+  if (!intro.children.length) insert(intro,'p',t('匯出檔沒有提供簡介資料。'),'muted small');
+  const photos=photoCollections().photos, preview=$('photoPreview');
+  clearList(preview);
+  photos.slice(0,9).forEach((_,i)=>photoTile(preview,photos,i));
+  if (!photos.length) insert(preview,'p',t('還沒有相片。'),'muted small');
+  const friends=me.friends||[], list=$('friendPreview');
+  list.replaceChildren();
+  $('friendPreviewCount').textContent=me.friends?t('{n} 位朋友',{n:friends.length}):t('匯出檔沒有朋友名單。');
+  for (const f of friends.slice(0,9)) {
+    const d=insert(list,'div','','friend-mini');
+    insert(d,'span',initial(f.name),'face').setAttribute('aria-hidden','true');insert(d,'span',f.name);
+  }
+}
+
+// Activity log: your own comments and reactions, newest first, grouped by day.
+function activityAll() {
+  if (activityRows) return activityRows;
+  const items=active.data.items;
+  // Audience settings are not activity, though Meta files them with the same fields.
+  const audience=i=>/post_audiences/i.test(active.data.sources[items[i].src]?.path||'');
+  return activityRows=items.map((_,i)=>i).filter(i=>isActivity(items[i].kind)&&!active.hidden.has(items[i])&&!audience(i))
+    .sort((i,j)=>(items[j].ts??0)-(items[i].ts??0)||i-j);
+}
+function activityRow(r) {
+  const row=el('article','','activity-row card'), reaction=r.kind==='reaction', type=r.activity?.type||'';
+  insert(row,'span',reaction?(type.match(/^\p{Extended_Pictographic}\S*/u)?.[0]||'👍'):'💬','activity-icon').setAttribute('aria-hidden','true');
+  const body=insert(row,'div','','activity-body');
+  insert(body,'p',r.title||(reaction?t('對 {what} 傳達了心情。',{what:r.body.filter(Boolean).join(', ')||t('一則內容')}):t('留言')),'activity-title');
+  if (reaction) {if (type) insert(body,'p',t(type),'small muted');}
+  else for (const t of r.body) insert(body,'p',t,'activity-quote');
+  if (r.attachments.length) mediaBlock(body,r);
+  const meta=insert(body,'p',r.ts==null?t('時間未提供'):hourClock().format(new Date(r.ts*1000)),'small muted');
+  const links=[...r.links,...(active.merged.get(r)?.links||[])].filter(l=>webLink(l.url));
+  if (links.length) {meta.append(' · ');const a=insert(meta,'a',t('查看原文 ↗'));a.href=absoluteWeb(links[0].url);a.target='_blank';a.rel='noopener noreferrer';}
+  return row;
+}
+function renderActivity() {
+  const items=active.data.items, all=activityAll(), nav=$('activityKinds'), list=$('activityList');
+  const terms=normalize($('activitySearch').value.trim()).split(/\s+/).filter(Boolean);
+  nav.replaceChildren();
+  for (const [kind,label] of [['','全部'],['comment','留言'],['reaction','心情']]) {
+    const b=insert(nav,'button','','');b.type='button';b.setAttribute('aria-pressed',String(kind===activityFilter));
+    insert(b,'span',t(label));insert(b,'span',count(kind?all.filter(i=>items[i].kind===kind).length:all.length),'small muted');
+    b.onclick=()=>{activityFilter=kind;renderActivity();};
+  }
+  const rows=all.filter(i=>(!activityFilter||items[i].kind===activityFilter)&&terms.every(t=>searchable[i].includes(t)));
+  const day=i=>timeOf(dayClock,items[i].ts);
+  clearList(list);
+  if (!rows.length) insert(list,'p',t(all.length?'沒有符合的活動紀錄。':'匯出檔裡沒有留言或心情紀錄。'),'empty card');
+  pager(list,$('activityMore'),rows,(i,pos)=>{
+    const f=document.createDocumentFragment();
+    if (pos===0||day(rows[pos-1])!==day(i)) insert(f,'h2',day(i),'day');
+    f.append(activityRow(items[i]));
+    return f;
+  },40);
+}
+$('openActivity').onclick=()=>{
+  $('profilePage').hidden=true;$('activityPage').hidden=false;renderActivity();window.scrollTo(0,0);$('activityHeading').focus();
+};
+$('closeActivity').onclick=()=>{
+  clearList($('activityList'));$('activityPage').hidden=true;$('profilePage').hidden=false;window.scrollTo(0,0);$('openActivity').focus();
+};
+$('activitySearch').oninput=()=>{clearTimeout(activityTimer);activityTimer=setTimeout(renderActivity,130);};
+
 function renderReport() {
   if(!active)return;
   const {data}=active, a=audit(data), container=$('reportBody');container.replaceChildren();
-  insert(container,'p','選取檔案或資料夾：'+data.inputs.join('、'),'small');
-  insert(container,'p','貼文 '+count(a.貼文筆數)+' 筆 · 相簿、相片等其他紀錄 '+count(a.其他紀錄筆數)+' 筆 · 未配對媒體 '+count(a.未配對媒體筆數)+' 個');
-  insert(container,'p','找到 '+count(a.可用附件檔數)+' 個本機附件，其中 '+count(a.可用圖片檔數)+' 個是圖片。日期依目前裝置時區顯示。','small');
-  insert(container,'p',a.範圍+' 建議核對一篇最早的貼文與一篇多圖貼文。','small muted');
-  for(const message of data.issues)insert(container,'p',message,'notice small');
+  insert(container,'p',t('選取檔案或資料夾：{list}',{list:data.inputs.join(', ')}),'small');
+  insert(container,'p',t('貼文 {posts} 筆 · 相簿、相片等其他紀錄 {other} 筆 · 未配對媒體 {loose} 個',{posts:a.貼文筆數,other:a.其他紀錄筆數,loose:a.未配對媒體筆數}));
+  if (a.留言筆數 || a.心情紀錄筆數) insert(container,'p',t('留言 {c} 則 · 心情紀錄 {r} 筆',{c:a.留言筆數,r:a.心情紀錄筆數}),'small');
+  insert(container,'p',t('找到 {files} 個本機附件，其中 {images} 個是圖片。日期依目前裝置時區顯示。',{files:a.可用附件檔數,images:a.可用圖片檔數}),'small');
+  insert(container,'p',a.範圍+t(' 建議核對一篇最早的貼文與一篇多圖貼文。'),'small muted');
+  for(const message of data.issues)insert(container,'p',msg(message),'notice small');
   if(a.附件待核對.length){
-    insert(container,'h3','待核對附件（'+count(a.附件待核對.length)+' 處）');const list=insert(container,'ul','','small');
+    insert(container,'h3',t('待核對附件（{n} 處）',{n:a.附件待核對.length}));const list=insert(container,'ul','','small');
     for(const row of a.附件待核對.slice(0,40))insert(list,'li',row.時間+' · '+row.項目+' · '+row.原因+' · '+row.附件);
-    if(a.附件待核對.length>40)insert(container,'p','此處顯示前 40 處，完整清單收在可下載的報告。','small');
+    if(a.附件待核對.length>40)insert(container,'p',t('此處顯示前 40 處，完整清單收在可下載的報告。'),'small');
   }
-  const details=insert(container,'details','','record');insert(details,'summary','檢視 '+count(data.sources.length)+' 份來源 JSON');
+  const details=insert(container,'details','','record');insert(details,'summary',t('檢視 {n} 份來源 JSON',{n:data.sources.length}));
   details.ontoggle=()=>{if(!details.open||details.children.length>1)return;
     const list=insert(details,'ul');data.sources.forEach((s,i)=>{
-      const li=insert(list,'li');insert(li,'span',s.bundle+' ／ '+s.path+' · '+count(s.count)+' 筆'+(s.note?' · '+s.note:'')+' ');
-      if(!s.problem){const b=insert(li,'button','原始檔','link-button');b.onclick=()=>originalFile(i);}
+      const li=insert(list,'li');insert(li,'span',s.bundle+' ／ '+s.path+' · '+t('{n} 筆',{n:s.count})+(s.note?' · '+msg(s.note):'')+' ');
+      if(!s.problem){const b=insert(li,'button',t('原始檔'),'link-button');b.onclick=()=>originalFile(i);}
     });
   };
-  if(data.otherJSON.length)insert(container,'p','另有 '+count(data.otherJSON.length)+' 個其他類別或未辨識路徑的 JSON，檔名見完整報告，原件在 Facebook 原始 ZIP。','small muted');
-  const b=insert(container,'button','下載完整核對報告','link-button');b.onclick=()=>download(jsonBlob(a),'貼文典藏-核對報告.json');
+  if(data.otherJSON.length)insert(container,'p',t('另有 {n} 個其他類別或未辨識路徑的 JSON，檔名見完整報告，原件在 Facebook 原始 ZIP。',{n:data.otherJSON.length}),'small muted');
+  const b=insert(container,'button',t('下載完整核對報告'),'link-button');b.onclick=()=>download(jsonBlob(a),t('貼文典藏-核對報告.json'));
 }
-$('report').addEventListener('toggle',()=>{if($('report').open)renderReport();});
+$('report').onclick=()=>{renderReport();$('reportDialog').showModal();};
+$('closeReport').onclick=()=>$('reportDialog').close();
+
+// Profile header data: the export's profile file, the newest profile and cover photos, then fallbacks.
+function guessName(data) {
+  const seen=new Map();
+  for (const r of data.items) {
+    const m=isPost(r)&&r.title.match(/^(.+?)\s*(?:新增了|更新了|分享了|在|和|updated|added|shared)/);
+    if (m) seen.set(m[1],(seen.get(m[1])||0)+1);
+  }
+  return [...seen].sort((a,b)=>b[1]-a[1])[0]?.[0]||'';
+}
+function latestAlbumPhoto(data,pattern) {
+  const album=data.items.find(r=>r.kind==='album'&&pattern.test(r.title.trim()));
+  if (!album) return null;
+  const photos=asArray(album.raw?.photos).filter(p=>p?.uri)
+    .sort((a,b)=>(toEpoch(b.creation_timestamp)??0)-(toEpoch(a.creation_timestamp)??0));
+  for (const p of photos) {
+    const ref=album.attachments.find(a=>a.ref===p.uri);
+    if (ref&&ref.asset!=null&&!issueOf(data,ref)&&data.assets[ref.asset].kind==='image') return ref.asset;
+  }
+  return null;
+}
+function profileOf(data) {
+  const p=data.profile||{}, text=v=>typeof v==='string'?v.trim():'';
+  return {...blankMe, name:text(p.name)||guessName(data)||t('我'), bio:text(p.bio), city:text(p.city),
+    work:p.work&&typeof p.work==='object'?{employer:text(p.work.employer),title:text(p.work.title)}:null,
+    friends:Array.isArray(p.friends)?p.friends.filter(f=>typeof f?.name==='string').sort((a,b)=>(b.ts??0)-(a.ts??0)):null,
+    avatar:latestAlbumPhoto(data,/^(?:大頭貼照|profile pictures)$/i), cover:latestAlbumPhoto(data,/^(?:封面相片|cover photos)$/i)};
+}
+function closeLibrary() {
+  for (const id of ['lightbox','filterDialog','reportDialog','rawDialog']) if ($(id).open) $(id).close();
+  for (const id of ['items','photoGrid','friendGrid','activityList','photoPreview']) clearList($(id));
+  resetThumbs();release(me.url);release(me.coverURL);me={...blankMe};
+  $('reportBody').replaceChildren();$('coverPhoto').replaceChildren();
+}
+// Static page text: [data-i18n] elements and [data-i18n-attr] attributes keep their Chinese original as the key.
+const markupKeys=new WeakMap();
+function translatePage() {
+  document.documentElement.lang=lang==='en'?'en':'zh-Hant-TW';
+  $('lang').value=lang;
+  if (!active) document.title=t('貼文典藏｜Facebook 離線保存工具');
+  for (const n of document.querySelectorAll('[data-i18n]')) {
+    if (!markupKeys.has(n)) markupKeys.set(n,n.textContent.trim());
+    n.textContent=t(markupKeys.get(n));
+  }
+  for (const n of document.querySelectorAll('[data-i18n-attr]')) {
+    if (!markupKeys.has(n)) markupKeys.set(n,Object.fromEntries(n.dataset.i18nAttr.split(' ').map(a=>[a,n.getAttribute(a)])));
+    for (const [a,key] of Object.entries(markupKeys.get(n))) n.setAttribute(a,t(key));
+  }
+}
+function headerText() {
+  const data=active.data, issues=allProblems(data).length;
+  const cautions=data.issues.length+data.sources.filter(s=>s.note&&s.note!==onlyUnsharedNote&&s.note!==onlyStatsNote&&s.note!==duplicateNote).length;
+  document.title=me.name+t('｜貼文典藏');
+  $('profileName').textContent=me.name;
+  $('friendCount').textContent=me.friends?t('{n} 位朋友',{n:me.friends.length}):t('{n} 篇貼文',{n:data.items.filter(isPost).length});
+  $('reportSummary').textContent=issues?t(' · {n} 處待核對',{n:issues}):cautions?t(' · 有提示'):'';
+  for (const o of $('year').options) o.text=o.value===''?t('所有年份'):o.value==='?'?t('日期未提供'):o.value;
+}
+// Rebuild a list in the new language and reload as many rows as were showing, so the reader keeps their place.
+function keepPlace(list,more,render) {
+  const n=list.children.length;
+  render();
+  while (list.children.length<n && !more.hidden) more.click();
+}
+function redraw() {
+  const y=window.scrollY;
+  if (!active.data.profile?.name) me.name=profileOf(active.data).name;
+  headerText();renderSide();
+  for (const a of document.querySelectorAll('.avatar.me')) paintAvatar(a);
+  keepPlace($('items'),$('more'),refresh);
+  if (rendered.photos) keepPlace($('photoGrid'),$('photoMore'),()=>showPhotos(photoView.sub,photoView.album));
+  if (rendered.friends) keepPlace($('friendGrid'),$('friendMore'),renderFriends);
+  if (!$('activityPage').hidden) keepPlace($('activityList'),$('activityMore'),renderActivity);
+  if ($('lightbox').open) showMedia();
+  if ($('reportDialog').open) renderReport();
+  window.scrollTo(0,y);
+}
+$('lang').onchange=()=>{
+  lang=$('lang').value;
+  try {localStorage.setItem('lang',lang);} catch {}
+  translatePage();setStatus(lastStatus);
+  if (active) redraw();
+};
 function showLibrary(model) {
-  resetThumbs();if($('lightbox').open)$('lightbox').close();active=model;
-  const data=model.data, issues=allProblems(data).length, cautions=data.issues.length+data.sources.filter(s=>s.note&&!s.note.startsWith('與其他')).length;
-  $('start').hidden=true;$('library').hidden=false;$('save').hidden=model.mode!=='input';
-  $('heading').textContent=model.mode==='input'?'貼文預覽':'我的貼文典藏';
-  $('totals').textContent=count(data.items.filter(isPost).length)+' 篇貼文 · '+count(data.assets.filter(a=>a.kind==='image'&&!a.problem).length)+' 個圖片檔';
-  $('reportSummary').textContent='匯入核對報告 · '+count(issues)+' 處附件待核對'+(cautions?' · 有來源提示':'');
-  $('reportBody').replaceChildren();$('report').open=!data.items.length;
-  if($('report').open)renderReport();
-  searchable=data.items.map(r=>normalize([r.title,...r.body,...r.links.flatMap(l=>[l.url,l.label]),...r.attachments.flatMap(a=>[a.label,fixedText(a.ref),a.asset==null?'':data.assets[a.asset]?.path||'']),...stringsIn(r.raw)].join('\n')));
-  const years=[...new Set(data.items.map(itemYear))].sort((a,b)=>a==='?'?1:b==='?'?-1:Number(b)-Number(a));
-  $('year').replaceChildren(new Option('所有年份',''));for(const y of years)$('year').add(new Option(y==='?'?'日期未提供':y,y));
-  clearFilters();refresh();
+  closeLibrary();
+  active=model;
+  const data=model.data;
+  Object.assign(model,buildThreads(data));
+  me=profileOf(data);photoSets=null;rendered={};activityFilter='';activityRows=null;
+  $('start').hidden=true;$('library').hidden=false;$('toolbar').hidden=false;$('mastNote').hidden=true;
+  $('save').hidden=model.mode!=='input';
+  $('profilePage').hidden=false;$('activityPage').hidden=true;
+  paintAvatar($('bigAvatar'));
+  const words=r=>!r?[]:[r.title,r.activity?.actor,r.activity?.type,en[r.activity?.type],...r.body,...r.links.flatMap(l=>[l.url,l.label]),...r.attachments.flatMap(a=>[a.label,fixedText(a.ref),a.asset==null?'':data.assets[a.asset]?.path||'']),...stringsIn(r.raw)];
+  searchable=data.items.map(r=>normalize([...words(r),...words(model.merged.get(r))].join('\n')));
+  const years=[...new Set(data.items.filter(isPost).map(itemYear))].sort((a,b)=>a==='?'?1:b==='?'?-1:Number(b)-Number(a));
+  $('year').replaceChildren(new Option('',''));for(const y of years)$('year').add(new Option(y,y));
+  headerText();
+  renderSide();showTab('posts');clearFilters();refresh();loadPortraits();
+  if (!data.items.length) {renderReport();$('reportDialog').showModal();}
 }
 async function tryBundle(entries) {
   for(const index of entries.filter(e=>/^index\.html$/i.test(baseName(e.path)))) {
@@ -745,7 +2444,7 @@ async function tryBundle(entries) {
     const data=dataCheck(JSON.parse(payload)), root=index.path.slice(0,-'index.html'.length);
     const byPath=new Map(entries.filter(e=>e.source===index.source).map(e=>[e.path,e]));
     const assets=data.assets.map(a=>{const e=byPath.get(root+safeFile(a.file,'asset'));if(!e&&!a.problem)a.problem='典藏包中缺少此檔';return e;});
-    const sources=data.sources.map(s=>{const e=byPath.get(root+safeFile(s.file,'source'));if(!e&&!s.problem){s.problem='典藏包中缺少此檔';data.issues.push(s.path+'：'+s.problem);}return e;});
+    const sources=data.sources.map(s=>{const e=byPath.get(root+safeFile(s.file,'source'));if(!e&&!s.problem){s.problem='典藏包中缺少此檔';data.issues.push({t:'{path}：{msg}',v:{path:s.path,msg:{t:s.problem}}});}return e;});
     return {mode:'bundle',data,assets,sources};
   }
   return null;
@@ -757,36 +2456,40 @@ async function openInputs(files,folder) {
     setStatus('正在讀取檔案清單…');await nextFrame();
     const inputs=[], entries=[], issues=[];
     if(folder) {
-      inputs.push(files[0].webkitRelativePath.split('/')[0]||'已解壓資料夾');
+      inputs.push(files[0].webkitRelativePath.split('/')[0]||t('已解壓資料夾'));
       for(const f of files) entries.push(looseEntry(f,f.webkitRelativePath||f.name,0));
     } else {
       for(const [i,f] of files.entries()) {
-        inputs.push(f.name);setStatus('正在讀取 '+f.name);
+        inputs.push(f.name);setStatus({t:'正在讀取 {name}',v:{name:f.name}});
         try {for(const e of await listZip(f,i))entries.push(e);}
-        catch(err){issues.push(f.name+'：'+err.message);}
+        catch(err){issues.push({t:'{path}：{msg}',v:{path:f.name,msg:{t:err.message}}});}
       }
     }
-    if(!entries.length)throw Error(issues.join(' ／ ')||'沒有讀到檔案');
+    if(!entries.length)throw Error(issues.map(x=>msg(x)).join(' ／ ')||'沒有讀到檔案');
     model=await tryBundle(entries);
     if(model && (issues.length||(!folder && files.length>1))) {
       model.data.issues.push(...issues,'已開啟既有典藏。若要建立新典藏，請另開一份並只選同一次 Facebook 匯出的 ZIP。');
     }
     if(!model)model=await loadFacebook(entries,inputs,issues,setStatus);
     showLibrary(model);setStatus(model.mode==='input'?'預覽完成。請按「儲存離線典藏 ZIP」建立可攜副本。':'已開啟離線典藏。');
-  } catch(err){setStatus('無法開啟：'+err.message);}
+  } catch(err){setStatus({t:'無法開啟：{msg}',v:{msg:{t:err.message}}});}
   finally{lock(false);$('zipInput').value='';$('folderInput').value='';}
 }
 $('chooseZip').onclick=()=>$('zipInput').click();$('chooseFolder').onclick=()=>$('folderInput').click();
 $('zipInput').onchange=e=>openInputs(Array.from(e.target.files),false);$('folderInput').onchange=e=>openInputs(Array.from(e.target.files),true);
-$('back').onclick=()=>{resetThumbs();if($('lightbox').open)$('lightbox').close();active=null;searchable=[];matches=[];$('items').replaceChildren();$('reportBody').replaceChildren();$('library').hidden=true;$('start').hidden=false;setStatus('');window.scrollTo(0,0);};
+$('back').onclick=()=>{
+  closeLibrary();active=null;searchable=[];
+  $('library').hidden=true;$('toolbar').hidden=true;$('mastNote').hidden=false;$('start').hidden=false;
+  document.title=t('貼文典藏｜Facebook 離線保存工具');setStatus('');window.scrollTo(0,0);
+};
 async function saveArchive() {
   if(busy||!active||active.mode!=='input')return;
   lock(true);const src=active;let stream=null;
   try {
-    const name='Facebook-貼文典藏-'+stamp()+'.zip';
+    const name=t('Facebook-貼文典藏-')+stamp()+'.zip';
     if(typeof window.showSaveFilePicker==='function'){
       try {
-        const handle=await window.showSaveFilePicker({suggestedName:name,types:[{description:'離線貼文典藏',accept:{'application/zip':['.zip']}}]});
+        const handle=await window.showSaveFilePicker({suggestedName:name,types:[{description:t('離線貼文典藏'),accept:{'application/zip':['.zip']}}]});
         if (src.data.inputs.includes(handle.name)) throw Error('請使用新的檔名儲存典藏，保留原始 Facebook ZIP。');
         stream=await handle.createWritable();
       } catch(err) {
@@ -799,9 +2502,9 @@ async function saveArchive() {
     const work=[...copy.assets.map((meta,i)=>[meta,src.assets[i]]),...copy.sources.map((meta,i)=>[meta,src.sources[i]])];
     let damaged=0;
     for(const [i,[meta,entry]] of work.entries()){
-      setStatus('正在校驗並封存檔案 '+(i+1)+' / '+work.length+' · '+baseName(meta.path));
+      setStatus({t:'正在校驗並封存檔案 {i} / {n} · {name}',v:{i:i+1,n:work.length,name:baseName(meta.path)}});
       try {await inspectEntry(entry);}
-      catch(err){meta.problem=err.message;damaged++;copy.issues.push(meta.path+'：'+err.message);continue;}
+      catch(err){meta.problem=err.message;damaged++;copy.issues.push({t:'{path}：{msg}',v:{path:meta.path,msg:{t:err.message}}});continue;}
       // Only per-entry source failures are recoverable. A write failure aborts the entire new file.
       await writer.add(meta.file,entry);
       if(i%12===0)await nextFrame();
@@ -816,18 +2519,20 @@ async function saveArchive() {
       showLibrary(src);
     }
     const unresolved=allProblems(copy).length;
-    setStatus('典藏 ZIP '+(result?'已送交瀏覽器下載':'已儲存')+'。可用本工具重開，或完整解壓後開啟 index.html。'+(unresolved||damaged?' 待核對附件 '+unresolved+' 處，讀取失敗檔案 '+damaged+' 個，詳見包內 report.json。':''));
+    setStatus({t:result?'典藏 ZIP 已送交瀏覽器下載。可用本工具重開，或完整解壓後開啟 index.html。{extra}':'典藏 ZIP 已儲存。可用本工具重開，或完整解壓後開啟 index.html。{extra}',
+      v:{extra:unresolved||damaged?{t:' 待核對附件 {n} 處，讀取失敗檔案 {d} 個，詳見包內 report.json。',v:{n:unresolved,d:damaged}}:''}});
   }catch(err){
     if(stream)await stream.abort().catch(()=>{});
-    setStatus('未完成儲存：'+err.message+'。可重新選擇儲存位置並再試一次。');
+    setStatus({t:'未完成儲存：{msg}。可重新選擇儲存位置並再試一次。',v:{msg:{t:err.message}}});
   }finally{lock(false);}
 }
 $('save').onclick=saveArchive;
 if(embedded!=='null'){
   try{showLibrary({data:dataCheck(JSON.parse(embedded)),mode:'static'});}
-  catch(err){setStatus('典藏索引無法開啟：'+err.message);}
+  catch(err){setStatus({t:'典藏索引無法開啟：{msg}',v:{msg:{t:err.message}}});}
 }
 
-</script>
+translatePage();
+  </script>
 </body>
 </html>

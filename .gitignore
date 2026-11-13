@@ -2,6 +2,7 @@
 *.[zZ][iI][pP]
 [Rr]eport.json
 *-核對報告.json
+*-report.json
 
 # 解壓或測試個人資料時使用的資料夾
 /private-data/
