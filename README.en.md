@@ -17,3 +17,24 @@ Comments you wrote and reactions you gave are in the "Activity log", sorted by d
 The page follows your browser's language (Traditional Chinese or English). Use the language menu at the top right to switch; the choice is remembered in that browser. Text that Facebook wrote into the export, such as post titles and album names, is shown as exported.
 
 The archive can only contain what was exported. Posts or attachments missing from the export entirely can't be detected by the import report.
+
+## Changelog
+
+### 0.2.0
+
+- The archive now looks like a Facebook profile: cover photo, profile picture, intro, posts, photos, friends and an activity log.
+- The interface can be switched between Traditional Chinese and English.
+- Fixes:
+  - The import report's reaction count now matches the activity log. Each reaction is counted once.
+  - Post audience settings are no longer read as reactions.
+  - Friend lists split across several files are read in full.
+  - Opening another export clears the friend and activity log searches.
+  - Names containing 在 or 和 are no longer cut short.
+  - When no name is found, the post author is no longer shown twice.
+  - Shared memories no longer say the original isn't in the export.
+  - The language can't be switched during import or save.
+  - Uses less memory, and the Photos tab opens faster.
+
+### 0.1.0
+
+- First alpha.
