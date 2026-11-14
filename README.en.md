@@ -20,6 +20,11 @@ The archive can only contain what was exported. Posts or attachments missing fro
 
 ## Changelog
 
+### 0.3.0
+
+- When several exports are opened together, their friend lists are merged and each friend is listed once.
+- Code cleanup with no other changes in behavior.
+
 ### 0.2.0
 
 - The archive now looks like a Facebook profile: cover photo, profile picture, intro, posts, photos, friends and an activity log.

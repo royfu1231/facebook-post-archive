@@ -1254,9 +1254,9 @@ function normalRecord(raw,kind,srcId,locator,resolve,addAsset,entry) {
 const nextFrame=()=>new Promise(ok=>setTimeout(ok,0));
 // Name, intro and friends for the profile header. Missing or unreadable files only leave those parts blank.
 async function readProfile(entries) {
-  const find=re=>entries.find(e=>re.test(canonicalPath(e.path)));
+  const files=re=>entries.filter(e=>re.test(canonicalPath(e.path)));
   const readJSON=async e=>JSON.parse(strictUTF8.decode(await (await inspectEntry(e,true)).arrayBuffer()));
-  const info=find(/(?:^|\/)profile_information\.json$/i), friends=entries.filter(e=>/(?:^|\/)(?:your_)?friends(?:_\d+)?\.json$/i.test(canonicalPath(e.path)));
+  const info=files(/(?:^|\/)profile_information\.json$/i)[0], friends=files(/(?:^|\/)(?:your_)?friends(?:_\d+)?\.json$/i);
   const profile={};
   try {
     if (info) {
@@ -1267,16 +1267,11 @@ async function readProfile(entries) {
       if (work) profile.work={employer:fixedText(work.employer),title:fixedText(work.title)};
     }
   } catch {}
-  // Big friend lists come split into your_friends_1.json, _2…; the same part can also arrive in two ZIPs.
-  const seen=new Set();
+  // Big friend lists come split into your_friends_1.json, _2…; the same part, or another export, can repeat friends.
+  const seen=new Set(), fresh=f=>!seen.has(f.name+'|'+f.ts)&&seen.add(f.name+'|'+f.ts);
   for (const e of friends) try {
     const raw=await readJSON(e), rows=raw.friends_v2||raw.friends||(Array.isArray(raw)?raw:[]);
-    profile.friends??=[];
-    for (const f of rows) {
-      if (typeof f?.name!=='string') continue;
-      const row={name:fixedText(f.name),ts:toEpoch(f.timestamp)}, key=row.name+'|'+row.ts;
-      if (!seen.has(key)) {seen.add(key);profile.friends.push(row);}
-    }
+    (profile.friends??=[]).push(...rows.filter(f=>typeof f?.name==='string').map(f=>({name:fixedText(f.name),ts:toEpoch(f.timestamp)})).filter(fresh));
   } catch {}
   return profile;
 }
@@ -1882,19 +1877,16 @@ function titlesOf(r) {
   };
   walk(r.raw);titleCache.set(r,out);return out;
 }
-const linesCache=new WeakMap();
-function postLines(r) {
-  if (linesCache.has(r)) return linesCache.get(r);
-  let lines;
-  if (r.kind==='album') lines=r.raw?.description?[fixedText(r.raw.description)]:[];
-  else {
-    lines=[...asArray(r.raw?.data).map(d=>d?.post),
-      ...asArray(r.raw?.attachments).flatMap(a=>asArray(a?.data)).map(d=>typeof d?.text==='string'?d.text:'')]
-      .map(fixedText).filter(t=>t.trim());
-    if (!lines.length) {const titles=titlesOf(r);lines=r.body.filter(t=>!titles.has(t));}
-  }
-  linesCache.set(r,lines);return lines;
+function readLines(r) {
+  if (r.kind==='album') return r.raw?.description?[fixedText(r.raw.description)]:[];
+  const own=[...asArray(r.raw?.data).map(d=>d?.post),
+    ...asArray(r.raw?.attachments).flatMap(a=>asArray(a?.data)).map(d=>typeof d?.text==='string'?d.text:'')]
+    .map(fixedText).filter(t=>t.trim());
+  if (own.length) return own;
+  const titles=titlesOf(r);
+  return r.body.filter(t=>!titles.has(t));
 }
+const linesCache=new WeakMap(), postLines=r=>linesCache.get(r)??linesCache.set(r,readLines(r)).get(r);
 function caption(r,label) {
   return label && !postLines(r).includes(label) && !titlesOf(r).has(label) ? label : '';
 }
@@ -1920,12 +1912,11 @@ function avatar(cls='') {
 function paintAvatar(a) {
   if (me.url) {const i=el('img');i.alt='';i.src=me.url;a.replaceChildren(i);} else a.textContent=initial(me.name);
 }
-let portraitToken=0; // showLibrary can reopen the same model, so compare runs, not models.
 async function loadPortraits() {
-  const token=++portraitToken;
+  const owner=me; // showLibrary can reopen the same model, but every open or close makes a new me.
   for (const [key,id] of [['url',me.avatar],['coverURL',me.cover]]) {
     if (id==null) continue;
-    try {const url=await uriFor(id); if(token!==portraitToken){release(url);return;} me[key]=url;} catch {}
+    try {const url=await uriFor(id); if(me!==owner){release(url);return;} me[key]=url;} catch {}
   }
   if (me.url) for (const a of document.querySelectorAll('.avatar.me')) paintAvatar(a);
   if (me.coverURL) {const i=el('img');i.alt='';i.src=me.coverURL;$('coverPhoto').replaceChildren(i);}
@@ -2379,7 +2370,7 @@ function profileOf(data) {
 function closeLibrary() {
   for (const id of ['lightbox','filterDialog','reportDialog','rawDialog']) if ($(id).open) $(id).close();
   for (const id of ['items','photoGrid','friendGrid','activityList','photoPreview']) clearList($(id));
-  resetThumbs();portraitToken++;release(me.url);release(me.coverURL);me={...blankMe};
+  resetThumbs();release(me.url);release(me.coverURL);me={...blankMe};
   $('friendSearch').value=$('activitySearch').value='';
   $('reportBody').replaceChildren();$('coverPhoto').replaceChildren();
 }
