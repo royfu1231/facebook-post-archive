@@ -893,6 +893,7 @@ function postFile(path) {
   const parts=partsOf(path), name=parts.pop(), base=name.replace(/\.json$/,'');
   if (!name.endsWith('.json') || parts.some(inMessaging) || parts.some(p=>/^(ads_information|ads_and_businesses|friends_and_followers)$/.test(p))) return '';
   const categories=parts.map(p=>p.split(/[（(]/)[0].replace(/[_\s]+$/,''));
+  if (/audiences?$/.test(base)) return ''; // Who-can-see settings, not posts or reactions.
   if (/^(?:your_)?(?:likes_and_reactions|reactions|按讚和心情|心情)(?:_v?\d+)*$/.test(base) ||
       (categories.includes('likes_and_reactions') && /^(?:posts_and_comments|posts|comments)(?:_\d+)?$/.test(base))) return 'reaction';
   if (/^(?:your_)?(?:comments?|留言)(?:$|_)/.test(base) && !/comments?_and_reactions/.test(base)) return 'comment';
@@ -1255,7 +1256,7 @@ const nextFrame=()=>new Promise(ok=>setTimeout(ok,0));
 async function readProfile(entries) {
   const find=re=>entries.find(e=>re.test(canonicalPath(e.path)));
   const readJSON=async e=>JSON.parse(strictUTF8.decode(await (await inspectEntry(e,true)).arrayBuffer()));
-  const info=find(/(?:^|\/)profile_information\.json$/i), friends=find(/(?:^|\/)(?:your_)?friends(?:_\d+)?\.json$/i);
+  const info=find(/(?:^|\/)profile_information\.json$/i), friends=entries.filter(e=>/(?:^|\/)(?:your_)?friends(?:_\d+)?\.json$/i.test(canonicalPath(e.path)));
   const profile={};
   try {
     if (info) {
@@ -1266,10 +1267,15 @@ async function readProfile(entries) {
       if (work) profile.work={employer:fixedText(work.employer),title:fixedText(work.title)};
     }
   } catch {}
-  try {
-    if (friends) {
-      const raw=await readJSON(friends), rows=raw.friends_v2||raw.friends||(Array.isArray(raw)?raw:[]);
-      profile.friends=rows.filter(f=>typeof f?.name==='string').map(f=>({name:fixedText(f.name),ts:toEpoch(f.timestamp)}));
+  // Big friend lists come split into your_friends_1.json, _2…; the same part can also arrive in two ZIPs.
+  const seen=new Set();
+  for (const e of friends) try {
+    const raw=await readJSON(e), rows=raw.friends_v2||raw.friends||(Array.isArray(raw)?raw:[]);
+    profile.friends??=[];
+    for (const f of rows) {
+      if (typeof f?.name!=='string') continue;
+      const row={name:fixedText(f.name),ts:toEpoch(f.timestamp)}, key=row.name+'|'+row.ts;
+      if (!seen.has(key)) {seen.add(key);profile.friends.push(row);}
     }
   } catch {}
   return profile;
@@ -1640,7 +1646,7 @@ $('archive-data').textContent='null';
 const template='<!doctype html>\n'+document.documentElement.outerHTML;
 const makeIndex=data=>new Blob([template.replace(payloadTag+'null'+endScript,()=>payloadTag+safeJSON(data)+endScript)],{type:'text/html;charset=utf-8'});
 let active=null, busy=false, searchable=[], searchTimer=0;
-const busyControls=['chooseZip','chooseFolder','save','back'];
+const busyControls=['chooseZip','chooseFolder','save','back','lang'];
 function lock(flag) {busy=flag; for (const key of busyControls) $(key).disabled=flag;}
 function dataCheck(data) {
   if (!data || data.format!==archiveFormat || !['items','assets','sources','issues','inputs','otherJSON'].every(k=>Array.isArray(data[k]))) throw Error('典藏索引格式不符');
@@ -1652,7 +1658,8 @@ function dataCheck(data) {
   const locations = new Set(data.items.map(r=>r.src+':'+r.locator));
   data.items = data.items.filter(row => {
     const source = Number.isInteger(row.src) ? data.sources[row.src] : null;
-    const stats = isShareStatistics(row.raw);
+    // Archives saved before audience files were skipped still hold their rows as reactions.
+    const stats = isShareStatistics(row.raw) || Boolean(source?.path && !postFile(source.path));
     const unshared = !row.title && !row.links.length && !row.attachments.length &&
         isEmptyUnsharedRecord(row.raw) && row.body.every(isNoValue);
     if (stats || unshared) {
@@ -1710,8 +1717,9 @@ function allProblems(data) {
   return out;
 }
 function audit(data) {
+  const twins=buildThreads(data).hidden; // Meta's second copy of each reaction, as in the activity log.
   return {建立時間:data.created,選取分檔:data.inputs,貼文筆數:data.items.filter(isPost).length,
-    留言筆數:data.items.filter(r=>r.kind==='comment').length,心情紀錄筆數:data.items.filter(r=>r.kind==='reaction').length,
+    留言筆數:data.items.filter(r=>r.kind==='comment').length,心情紀錄筆數:data.items.filter(r=>r.kind==='reaction'&&!twins.has(r)).length,
     其他紀錄筆數:data.items.filter(r=>!isPost(r)&&!isActivity(r.kind)&&r.kind!=='loose').length,未配對媒體筆數:data.items.filter(r=>r.kind==='loose').length,
     可用圖片檔數:data.assets.filter(a=>a.kind==='image'&&!a.problem).length,可用附件檔數:data.assets.filter(a=>!a.problem).length,
     附件待核對:allProblems(data),讀取提示:data.issues.map(x=>msg(x)),來源資料:data.sources.map(s=>({原始分檔:s.bundle,路徑:s.path,典藏檔:s.problem?null:s.file,索引項目:s.count,狀態:msg(s.note||'已建立索引'),檔案問題:msg(s.problem||'')})),
@@ -1874,14 +1882,18 @@ function titlesOf(r) {
   };
   walk(r.raw);titleCache.set(r,out);return out;
 }
+const linesCache=new WeakMap();
 function postLines(r) {
-  if (r.kind==='album') return r.raw?.description?[fixedText(r.raw.description)]:[];
-  const own=[...asArray(r.raw?.data).map(d=>d?.post),
-    ...asArray(r.raw?.attachments).flatMap(a=>asArray(a?.data)).map(d=>typeof d?.text==='string'?d.text:'')]
-    .map(fixedText).filter(t=>t.trim());
-  if (own.length) return own;
-  const titles=titlesOf(r);
-  return r.body.filter(t=>!titles.has(t));
+  if (linesCache.has(r)) return linesCache.get(r);
+  let lines;
+  if (r.kind==='album') lines=r.raw?.description?[fixedText(r.raw.description)]:[];
+  else {
+    lines=[...asArray(r.raw?.data).map(d=>d?.post),
+      ...asArray(r.raw?.attachments).flatMap(a=>asArray(a?.data)).map(d=>typeof d?.text==='string'?d.text:'')]
+      .map(fixedText).filter(t=>t.trim());
+    if (!lines.length) {const titles=titlesOf(r);lines=r.body.filter(t=>!titles.has(t));}
+  }
+  linesCache.set(r,lines);return lines;
 }
 function caption(r,label) {
   return label && !postLines(r).includes(label) && !titlesOf(r).has(label) ? label : '';
@@ -1899,7 +1911,8 @@ function placeName(r) {
   for (const a of asArray(r.raw?.attachments)) for (const d of asArray(a?.data)) if (d?.place?.name) return fixedText(d.place.name);
   return '';
 }
-const isShared=r=>isPost(r)&&/分享了|shared/i.test(r.title);
+// A shared memory carries the old post's own text and photos, so it isn't a share with a missing original.
+const isShared=r=>isPost(r)&&/分享了|shared/i.test(r.title)&&!/動態回顧|memor(?:y|ies)/i.test(r.title);
 
 function avatar(cls='') {
   const a=el('span','','avatar me'+(cls?' '+cls:''));a.setAttribute('aria-hidden','true');paintAvatar(a);return a;
@@ -1907,11 +1920,12 @@ function avatar(cls='') {
 function paintAvatar(a) {
   if (me.url) {const i=el('img');i.alt='';i.src=me.url;a.replaceChildren(i);} else a.textContent=initial(me.name);
 }
+let portraitToken=0; // showLibrary can reopen the same model, so compare runs, not models.
 async function loadPortraits() {
-  const owner=active;
+  const token=++portraitToken;
   for (const [key,id] of [['url',me.avatar],['coverURL',me.cover]]) {
     if (id==null) continue;
-    try {const url=await uriFor(id); if(active!==owner){release(url);return;} me[key]=url;} catch {}
+    try {const url=await uriFor(id); if(token!==portraitToken){release(url);return;} me[key]=url;} catch {}
   }
   if (me.url) for (const a of document.querySelectorAll('.avatar.me')) paintAvatar(a);
   if (me.coverURL) {const i=el('img');i.alt='';i.src=me.coverURL;$('coverPhoto').replaceChildren(i);}
@@ -1921,9 +1935,13 @@ function postHead(r,menu=false) {
   const head=el('header','','posthead');
   head.append(avatar());
   const who=insert(head,'div','','who'), line=insert(who,'p','','byline');
-  insert(line,'strong',me.name);
-  const action=actionText(r);
-  if (action) line.append(' '+action);
+  // Facebook titles begin with the actor. One that isn't our name (someone else's post, or no name found) is shown whole.
+  if (isPost(r)&&r.title&&!r.title.startsWith(me.name)) line.append(r.title);
+  else {
+    insert(line,'strong',me.name);
+    const action=actionText(r);
+    if (action) line.append(' '+action);
+  }
   const tags=tagNames(r), place=placeName(r);
   if (tags.length) {line.append(' — '+t('和')+' ');insert(line,'strong',tags.join(', '));line.append(t(' 在一起'));}
   if (place) {line.append(' — '+t('在')+' ');insert(line,'strong',place);}
@@ -2259,9 +2277,7 @@ function renderSide() {
 function activityAll() {
   if (activityRows) return activityRows;
   const items=active.data.items;
-  // Audience settings are not activity, though Meta files them with the same fields.
-  const audience=i=>/post_audiences/i.test(active.data.sources[items[i].src]?.path||'');
-  return activityRows=items.map((_,i)=>i).filter(i=>isActivity(items[i].kind)&&!active.hidden.has(items[i])&&!audience(i))
+  return activityRows=items.map((_,i)=>i).filter(i=>isActivity(items[i].kind)&&!active.hidden.has(items[i]))
     .sort((i,j)=>(items[j].ts??0)-(items[i].ts??0)||i-j);
 }
 function activityRow(r) {
@@ -2336,7 +2352,8 @@ $('closeReport').onclick=()=>$('reportDialog').close();
 function guessName(data) {
   const seen=new Map();
   for (const r of data.items) {
-    const m=isPost(r)&&r.title.match(/^(.+?)\s*(?:新增了|更新了|分享了|在|和|updated|added|shared)/);
+    // 在/和 only count after a space, so names like 王和平 stay whole.
+    const m=isPost(r)&&r.title.match(/^(.+?)(?:\s*(?:新增了|更新了|分享了)|\s+(?:在|和|updated|added|shared))/);
     if (m) seen.set(m[1],(seen.get(m[1])||0)+1);
   }
   return [...seen].sort((a,b)=>b[1]-a[1])[0]?.[0]||'';
@@ -2362,7 +2379,8 @@ function profileOf(data) {
 function closeLibrary() {
   for (const id of ['lightbox','filterDialog','reportDialog','rawDialog']) if ($(id).open) $(id).close();
   for (const id of ['items','photoGrid','friendGrid','activityList','photoPreview']) clearList($(id));
-  resetThumbs();release(me.url);release(me.coverURL);me={...blankMe};
+  resetThumbs();portraitToken++;release(me.url);release(me.coverURL);me={...blankMe};
+  $('friendSearch').value=$('activitySearch').value='';
   $('reportBody').replaceChildren();$('coverPhoto').replaceChildren();
 }
 // Static page text: [data-i18n] elements and [data-i18n-attr] attributes keep their Chinese original as the key.
